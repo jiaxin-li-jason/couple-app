@@ -5,7 +5,8 @@ import { usePathname } from 'next/navigation';
 const tabs = [
   { href: '/', label: '纪念日', icon: '🏠' },
   { href: '/album', label: '相册', icon: '🖼️' },
-  { href: '/play', label: '互动', icon: '🎮' },
+  { href: '/games', label: '游戏', icon: '🎮' },
+  { href: '/play', label: '互动', icon: '💕' },
 ];
 
 export default function TabBar() {
