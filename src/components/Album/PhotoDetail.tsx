@@ -153,6 +153,21 @@ export default function PhotoDetail({ photo, groupPhotos, currentIndex, onNaviga
           <span className="text-gray-400">💬 {comments.length}</span>
         </div>
 
+        {/* 删除按钮 */}
+        <button
+          onClick={async () => {
+            if (window.confirm('确定要删除这张照片吗？')) {
+              const { supabase } = await import('@/lib/supabase');
+              await supabase.from('photos').delete().eq('id', photo.id);
+              toast.success('已删除');
+              router.back();
+            }
+          }}
+          className="w-full py-2.5 text-sm text-red-400 border border-red-200 rounded-xl hover:bg-red-50 transition-colors"
+        >
+          🗑️ 删除照片
+        </button>
+
         {comments.length > 0 && (
           <div className="space-y-3 pt-2">
             {comments.map((c) => (

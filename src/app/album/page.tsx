@@ -8,7 +8,6 @@ import { formatDate } from '@/lib/utils';
 
 export default function AlbumPage() {
   const { photos, loading, uploadPhotos, deletePhoto } = usePhotos();
-  const [deletingId, setDeletingId] = useState<string | null>(null);
 
   // 按日期分组
   const grouped = useMemo(() => {
@@ -64,33 +63,12 @@ export default function AlbumPage() {
                     className="flex-shrink-0 w-72 snap-center"
                   >
                     <div className="bg-white rounded-2xl shadow-sm overflow-hidden hover:shadow-md hover:-translate-y-0.5 transition-all duration-200">
-                      <div className="relative">
                         <img
                           src={photo.image_url}
                           alt={photo.caption}
                           className="w-full h-64 object-cover"
                           loading="lazy"
                         />
-                        <button
-                          onClick={async (e) => {
-                            e.preventDefault();
-                            if (deletingId === photo.id) {
-                              try {
-                                await deletePhoto(photo.id);
-                                toast.success('已删除');
-                              } catch {
-                                toast.error('删除失败');
-                              }
-                              setDeletingId(null);
-                            } else {
-                              setDeletingId(photo.id);
-                            }
-                          }}
-                          className="absolute top-2 right-2 w-7 h-7 flex items-center justify-center rounded-full bg-black/40 text-white text-sm hover:bg-black/60 transition-colors"
-                        >
-                          {deletingId === photo.id ? '✓' : '✕'}
-                        </button>
-                      </div>
                       {photo.caption && (
                         <div className="px-3 py-2.5">
                           <p className="text-sm text-gray-700 line-clamp-2">{photo.caption}</p>
