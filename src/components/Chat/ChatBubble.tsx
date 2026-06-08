@@ -58,17 +58,6 @@ export default function ChatBubble({ message, isMine, userInfo, partnerInfo }: P
             loading="lazy"
           />
         )}
-        {message.type === 'voice' && (
-          <div
-            className={`rounded-2xl px-4 py-2.5 ${
-              isMine
-                ? 'bg-gradient-to-r from-rose-400 to-pink-500 text-white shadow-sm'
-                : 'bg-white shadow-sm border border-gray-100'
-            }`}
-          >
-            <audio controls src={message.content} className="h-8 max-w-[200px]" />
-          </div>
-        )}
         <div className={`flex items-center gap-1 mt-0.5 ${isMine ? 'justify-end' : 'justify-start'}`}>
           <p className="text-xs text-gray-400">{formatDate(message.created_at)}</p>
           {isMine && message.read && <span className="text-xs text-rose-400">已读</span>}
