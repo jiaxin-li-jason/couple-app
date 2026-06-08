@@ -1,0 +1,14 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* iOS Safari PWA safe area */
+body {
+  padding-bottom: env(safe-area-inset-bottom, 0px);
+}
+
+/* Prevent pull-to-refresh in PWA */
+html, body {
+  overscroll-behavior: none;
+  -webkit-overflow-scrolling: touch;
+}
