@@ -47,7 +47,7 @@ export default function AnniversaryForm({ onSubmit }: Props) {
           <div className="absolute inset-0 bg-black/20 backdrop-blur-sm" onClick={() => setShow(false)} />
 
           {/* 表单卡片 */}
-          <div className="relative w-full max-w-lg bg-white rounded-3xl rounded-b-none px-6 pt-6 pb-10 animate-slide-up">
+          <div className="relative w-full max-w-lg bg-white rounded-3xl rounded-b-none px-6 pt-6 pb-[calc(2.5rem+env(safe-area-inset-bottom,0px))] animate-slide-up">
             {/* 拖拽指示条 */}
             <div className="w-10 h-1 bg-gray-200 rounded-full mx-auto mb-5" />
 

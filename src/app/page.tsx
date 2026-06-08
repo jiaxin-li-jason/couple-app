@@ -41,7 +41,7 @@ function Greeting() {
 }
 
 export default function HomePage() {
-  const { anniversaries, loveDate, daysTogether, loading, addAnniversary, deleteAnniversary } = useAnniversaries();
+  const { anniversaries, loveDate, daysTogether, loading, addAnniversary, deleteAnniversary, updateAnniversary } = useAnniversaries();
 
   if (loading) {
     return <div className="pt-6 text-center text-gray-400 py-20">加载中...</div>;
@@ -73,6 +73,10 @@ export default function HomePage() {
           onDelete={async (id) => {
             await deleteAnniversary(id);
             toast.success('已删除');
+          }}
+          onUpdate={async (id, updates) => {
+            await updateAnniversary(id, updates);
+            toast.success('已更新');
           }}
         />
         <AnniversaryForm

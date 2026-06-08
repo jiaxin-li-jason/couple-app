@@ -65,3 +65,8 @@ body {
   -ms-overflow-style: none;
   scrollbar-width: none;
 }
+
+/* ===== 下拉菜单淡入 ===== */
+.animate-fade-in {
+  animation: fadeIn 0.15s ease-out forwards;
+}

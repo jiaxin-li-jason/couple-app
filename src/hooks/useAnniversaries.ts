@@ -96,5 +96,11 @@ export function useAnniversaries() {
     await fetchAll();
   }, [fetchAll]);
 
-  return { anniversaries, loveDate, daysTogether, loading, addAnniversary, deleteAnniversary, refresh: fetchAll };
+  const updateAnniversary = useCallback(async (id: string, updates: { title?: string; date?: string; type?: string }) => {
+    const { error } = await supabase.from('anniversaries').update(updates).eq('id', id);
+    if (error) throw error;
+    await fetchAll();
+  }, [fetchAll]);
+
+  return { anniversaries, loveDate, daysTogether, loading, addAnniversary, deleteAnniversary, updateAnniversary, refresh: fetchAll };
 }

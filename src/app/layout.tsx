@@ -43,7 +43,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         <OfflineBanner />
         <PairingGuard>
           <NotificationInit />
-          <main className="max-w-lg mx-auto h-full flex flex-col px-4">
+          <main className="max-w-lg mx-auto h-full flex flex-col px-4 pb-[calc(4rem+env(safe-area-inset-bottom,0px))]">
             {children}
           </main>
           <TabBar />
