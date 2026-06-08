@@ -153,7 +153,7 @@ export default function CountdownList({ anniversaries, onDelete, onUpdate }: Pro
 
       {/* 编辑弹窗 */}
       {editing && (
-        <div className="fixed inset-0 z-50 flex items-end justify-center">
+        <div className="fixed inset-0 z-[60] flex items-end justify-center">
           <div className="absolute inset-0 bg-black/20 backdrop-blur-sm" onClick={() => setEditing(null)} />
           <div className="relative w-full max-w-lg bg-white rounded-3xl rounded-b-none px-6 pt-6 pb-[calc(2.5rem+env(safe-area-inset-bottom,0px))] animate-slide-up">
             <div className="w-10 h-1 bg-gray-200 rounded-full mx-auto mb-5" />

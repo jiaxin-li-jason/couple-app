@@ -31,6 +31,7 @@ export default function PhotoDetail({ photo, groupPhotos, currentIndex, onNaviga
   const [userMap, setUserMap] = useState<Record<string, { nickname: string; avatar_url: string | null }>>({});
   const [editingCaption, setEditingCaption] = useState(false);
   const [newCaption, setNewCaption] = useState(photo.caption || '');
+  const [showMenu, setShowMenu] = useState(false);
   const touchStart = useRef(0);
   const containerRef = useRef<HTMLDivElement>(null);
 
@@ -45,7 +46,6 @@ export default function PhotoDetail({ photo, groupPhotos, currentIndex, onNaviga
     const { data: cmts } = await supabase.from('comments').select('*').eq('photo_id', photo.id).order('created_at', { ascending: true });
     setComments(cmts || []);
 
-    // Fetch user info for all comment authors
     const userIds = (cmts || []).map(c => c.user_id).filter((id, i, arr) => arr.indexOf(id) === i);
     if (userIds.length > 0) {
       const { data: users } = await supabase.from('users').select('id, nickname, avatar_url').in('id', userIds);
@@ -102,10 +102,11 @@ export default function PhotoDetail({ photo, groupPhotos, currentIndex, onNaviga
   const hasNext = currentIndex < groupPhotos.length - 1;
 
   return (
-    <div className="min-h-screen bg-[#FAFAF8]">
-      <div className="sticky top-0 bg-white border-b border-gray-200 flex items-center px-4 py-3 z-10">
+    <div className="h-full flex flex-col bg-[#FAFAF8]">
+      {/* 顶部导航栏 */}
+      <div className="shrink-0 bg-white border-b border-gray-200 flex items-center px-4 py-3 z-10">
         <button onClick={() => router.back()} className="text-gray-500 mr-4 font-medium text-sm hover:text-gray-700 transition-colors">← 返回</button>
-        <span className="text-sm font-medium text-gray-500">
+        <span className="flex-1 text-sm font-medium text-gray-500">
           {formatDate(photo.date || photo.created_at)}
           {groupPhotos.length > 1 && (
             <span className="text-gray-400 ml-2">
@@ -113,122 +114,134 @@ export default function PhotoDetail({ photo, groupPhotos, currentIndex, onNaviga
             </span>
           )}
         </span>
+
+        {/* 三点菜单 */}
+        <div className="relative">
+          <button
+            onClick={() => setShowMenu(!showMenu)}
+            className="w-8 h-8 flex items-center justify-center rounded-full text-gray-400 hover:text-gray-600 hover:bg-gray-100 transition-colors text-lg"
+          >
+            ⋯
+          </button>
+          {showMenu && (
+            <>
+              <div className="fixed inset-0 z-40" onClick={() => setShowMenu(false)} />
+              <div className="absolute right-0 top-full mt-1 z-50 bg-white rounded-xl shadow-lg border border-gray-100 py-1 min-w-[120px] animate-fade-in">
+                <button onClick={() => { setNewCaption(photo.caption || ''); setEditingCaption(true); setShowMenu(false); }} className="w-full px-4 py-2.5 text-left text-sm text-gray-700 hover:bg-gray-50 flex items-center gap-2">
+                  ✏️ 编辑
+                </button>
+                <div className="h-px bg-gray-100 mx-2" />
+                <button onClick={async () => { setShowMenu(false); if (window.confirm('确定要删除这张照片吗？')) { await supabase.from('photos').delete().eq('id', photo.id); toast.success('已删除'); router.back(); } }} className="w-full px-4 py-2.5 text-left text-sm text-red-500 hover:bg-red-50 flex items-center gap-2">
+                  🗑️ 删除
+                </button>
+              </div>
+            </>
+          )}
+        </div>
       </div>
 
-      <div
-        ref={containerRef}
-        className="bg-black relative select-none"
-        onTouchStart={handleTouchStart}
-        onTouchEnd={handleTouchEnd}
-      >
-        <img src={photo.image_url} alt={photo.caption} className="w-full aspect-square object-cover" />
+      {/* 可滚动内容区 */}
+      <div className="flex-1 overflow-y-auto min-h-0">
+        {/* 照片 */}
+        <div
+          ref={containerRef}
+          className="bg-black relative select-none"
+          onTouchStart={handleTouchStart}
+          onTouchEnd={handleTouchEnd}
+        >
+          <img src={photo.image_url} alt={photo.caption} className="w-full aspect-square object-cover" />
 
-        {hasPrev && (
-          <button
-            onClick={() => onNavigate(currentIndex - 1)}
-            className="absolute left-2 top-1/2 -translate-y-1/2 w-10 h-10 bg-white/80 rounded-full flex items-center justify-center text-gray-700 shadow-md hover:bg-white transition-colors opacity-0 md:opacity-100"
-          >
-            ‹
-          </button>
-        )}
-        {hasNext && (
-          <button
-            onClick={() => onNavigate(currentIndex + 1)}
-            className="absolute right-2 top-1/2 -translate-y-1/2 w-10 h-10 bg-white/80 rounded-full flex items-center justify-center text-gray-700 shadow-md hover:bg-white transition-colors opacity-0 md:opacity-100"
-          >
-            ›
-          </button>
-        )}
+          {hasPrev && (
+            <button
+              onClick={() => onNavigate(currentIndex - 1)}
+              className="absolute left-2 top-1/2 -translate-y-1/2 w-10 h-10 bg-white/80 rounded-full flex items-center justify-center text-gray-700 shadow-md hover:bg-white transition-colors"
+            >
+              ‹
+            </button>
+          )}
+          {hasNext && (
+            <button
+              onClick={() => onNavigate(currentIndex + 1)}
+              className="absolute right-2 top-1/2 -translate-y-1/2 w-10 h-10 bg-white/80 rounded-full flex items-center justify-center text-gray-700 shadow-md hover:bg-white transition-colors"
+            >
+              ›
+            </button>
+          )}
 
-        {groupPhotos.length > 1 && (
-          <div className="absolute bottom-3 left-1/2 -translate-x-1/2 flex gap-1.5">
-            {groupPhotos.map((_, i) => (
-              <span
-                key={i}
-                className={`w-1.5 h-1.5 rounded-full transition-all ${
-                  i === currentIndex ? 'bg-white w-3' : 'bg-white/50'
-                }`}
-              />
-            ))}
+          {groupPhotos.length > 1 && (
+            <div className="absolute bottom-3 left-1/2 -translate-x-1/2 flex gap-1.5">
+              {groupPhotos.map((_, i) => (
+                <span
+                  key={i}
+                  className={`w-1.5 h-1.5 rounded-full transition-all ${
+                    i === currentIndex ? 'bg-white w-3' : 'bg-white/50'
+                  }`}
+                />
+              ))}
+            </div>
+          )}
+        </div>
+
+        {/* 文案 + 互动 */}
+        <div className="p-4 space-y-4">
+          {photo.caption && <p className="text-gray-700 font-medium">{photo.caption}</p>}
+
+          <div className="flex items-center gap-4">
+            <button onClick={toggleLike} className={`text-lg ${liked ? 'text-red-500' : 'text-gray-400'}`}>
+              {liked ? '❤️' : '🤍'} {likeCount}
+            </button>
+            <span className="text-gray-400">💬 {comments.length}</span>
           </div>
-        )}
-      </div>
 
-      <div className="p-4 space-y-4">
-        {photo.caption && <p className="text-gray-700 font-medium">{photo.caption}</p>}
-
-        <div className="flex items-center gap-4">
-          <button onClick={toggleLike} className={`text-lg ${liked ? 'text-red-500' : 'text-gray-400'}`}>
-            {liked ? '❤️' : '🤍'} {likeCount}
-          </button>
-          <span className="text-gray-400">💬 {comments.length}</span>
-        </div>
-
-        <div className="space-y-2">
-          <button
-            onClick={() => {
-              setNewCaption(photo.caption || '');
-              setEditingCaption(true);
-            }}
-            className="w-full py-2.5 text-sm text-gray-600 border border-gray-200 rounded-lg hover:bg-gray-50 transition-colors"
-          >
-            编辑文案
-          </button>
-          <button
-            onClick={async () => {
-              if (window.confirm('确定要删除这张照片吗？')) {
-                const { supabase } = await import('@/lib/supabase');
-                await supabase.from('photos').delete().eq('id', photo.id);
-                toast.success('已删除');
-                router.back();
-              }
-            }}
-            className="w-full py-2.5 text-sm text-red-400 border border-red-200 rounded-lg hover:bg-red-50 transition-colors"
-          >
-            删除照片
-          </button>
-        </div>
-
-        {comments.length > 0 && (
-          <div className="space-y-3 pt-2">
-            {comments.map((c) => {
-              const user = userMap[c.user_id];
-              return (
-                <div key={c.id} className="bg-white rounded-lg px-4 py-2.5 border border-gray-100">
-                  <div className="flex items-center gap-2 mb-1.5">
-                    {user?.avatar_url ? (
-                      <img src={user.avatar_url} alt="" className="w-6 h-6 rounded-full object-cover" />
-                    ) : (
-                      <div className="w-6 h-6 rounded-full bg-gray-200 flex items-center justify-center text-[10px] text-gray-500">
-                        {user?.nickname?.charAt(0) || '?'}
-                      </div>
-                    )}
-                    <span className="text-xs font-medium text-gray-600">{user?.nickname || '匿名'}</span>
+          {/* 评论列表 */}
+          {comments.length > 0 && (
+            <div className="space-y-3 pt-2">
+              {comments.map((c) => {
+                const user = userMap[c.user_id];
+                return (
+                  <div key={c.id} className="bg-white rounded-lg px-4 py-2.5 border border-gray-100">
+                    <div className="flex items-center gap-2 mb-1.5">
+                      {user?.avatar_url ? (
+                        <img src={user.avatar_url} alt="" className="w-6 h-6 rounded-full object-cover" />
+                      ) : (
+                        <div className="w-6 h-6 rounded-full bg-gray-200 flex items-center justify-center text-[10px] text-gray-500">
+                          {user?.nickname?.charAt(0) || '?'}
+                        </div>
+                      )}
+                      <span className="text-xs font-medium text-gray-600">{user?.nickname || '匿名'}</span>
+                    </div>
+                    <p className="text-sm text-gray-700">{c.text}</p>
+                    <p className="text-xs text-gray-400 mt-1">{formatDate(c.created_at)}</p>
                   </div>
-                  <p className="text-sm text-gray-700">{c.text}</p>
-                  <p className="text-xs text-gray-400 mt-1">{formatDate(c.created_at)}</p>
-                </div>
-              );
-            })}
-          </div>
-        )}
+                );
+              })}
+            </div>
+          )}
 
-        <div className="flex gap-2 pt-2">
+          {/* 底部留白，确保最后一条评论不被输入框遮挡 */}
+          <div className="h-20" />
+        </div>
+      </div>
+
+      {/* 固定底部评论输入框 */}
+      <div className="shrink-0 bg-white border-t border-gray-200 px-4 py-3 pb-[calc(0.75rem+env(safe-area-inset-bottom,0px))]">
+        <div className="flex gap-2">
           <input
             value={commentText}
             onChange={(e) => setCommentText(e.target.value)}
+            onKeyDown={(e) => { if (e.key === 'Enter') addComment(); }}
             placeholder="写评论..."
-            className="flex-1 bg-white border border-gray-200 rounded-lg px-4 py-2.5 text-sm outline-none focus:border-amber-500 transition-colors"
+            className="flex-1 bg-gray-50 border border-gray-200 rounded-full px-4 py-2.5 text-sm outline-none focus:border-amber-500 focus:bg-white transition-colors"
           />
-          <button onClick={addComment} className="bg-amber-500 text-white px-4 py-2.5 rounded-lg text-sm font-medium active:scale-[0.98] transition-all">
+          <button onClick={addComment} className="bg-amber-500 text-white px-4 py-2.5 rounded-full text-sm font-medium active:scale-[0.98] transition-all">
             发送
           </button>
         </div>
       </div>
 
-      {/* Edit Caption Modal */}
+      {/* 编辑文案弹窗 */}
       {editingCaption && (
-        <div className="fixed inset-0 z-50 flex items-end justify-center">
+        <div className="fixed inset-0 z-[60] flex items-end justify-center">
           <div className="absolute inset-0 bg-black/20 backdrop-blur-sm" onClick={() => setEditingCaption(false)} />
           <div className="relative w-full max-w-lg bg-white rounded-3xl rounded-b-none px-6 pt-6 pb-[calc(2.5rem+env(safe-area-inset-bottom,0px))] animate-slide-up">
             <div className="w-10 h-1 bg-gray-200 rounded-full mx-auto mb-5" />

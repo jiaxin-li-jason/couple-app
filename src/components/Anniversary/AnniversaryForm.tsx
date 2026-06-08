@@ -40,16 +40,13 @@ export default function AnniversaryForm({ onSubmit }: Props) {
         </button>
       )}
 
-      {/* 底部弹出表单 — 遮罩层 */}
+      {/* 底部弹出表单 */}
       {show && (
-        <div className="fixed inset-0 z-50 flex items-end justify-center">
-          {/* 半透明背景 */}
+        <div className="fixed inset-0 z-[60] flex items-end justify-center">
           <div className="absolute inset-0 bg-black/20 backdrop-blur-sm" onClick={() => setShow(false)} />
 
-          {/* 表单卡片 */}
           <div className="relative w-full max-w-lg bg-white rounded-3xl rounded-b-none animate-slide-up max-h-[90vh] flex flex-col">
             <div className="px-6 pt-6 shrink-0">
-              {/* 拖拽指示条 */}
               <div className="w-10 h-1 bg-gray-200 rounded-full mx-auto mb-5" />
               <h3 className="text-base font-bold text-gray-800 text-center mb-5">添加纪念日</h3>
             </div>
@@ -68,7 +65,7 @@ export default function AnniversaryForm({ onSubmit }: Props) {
                 className="w-full bg-gray-50 border border-gray-200 rounded-xl px-4 py-3 text-sm outline-none focus:border-rose-300 focus:bg-white transition-all"
               />
 
-              {/* 类型选择 — 大按钮样式 */}
+              {/* 类型选择 */}
               <div>
                 <p className="text-xs text-gray-400 mb-2 ml-1">类型</p>
                 <div className="grid grid-cols-4 gap-2">
@@ -90,7 +87,7 @@ export default function AnniversaryForm({ onSubmit }: Props) {
               </div>
             </div>
 
-            <div className="shrink-0 px-6 pt-4 pb-[calc(2.5rem+env(safe-area-inset-bottom,0px))]">
+            <div className="shrink-0 px-6 pt-4 pb-[calc(1.5rem+env(safe-area-inset-bottom,0px))]">
               <div className="flex gap-3">
                 <button
                   onClick={() => setShow(false)}
