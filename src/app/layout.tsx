@@ -2,6 +2,7 @@ import type { Metadata, Viewport } from 'next';
 import './globals.css';
 import TabBar from '@/components/TabBar';
 import PairingGuard from '@/components/PairingGuard';
+import OfflineBanner from '@/components/OfflineBanner';
 import { Toaster } from 'react-hot-toast';
 
 export const metadata: Metadata = {
@@ -32,6 +33,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         <meta name="apple-mobile-web-app-capable" content="yes" />
       </head>
       <body className="bg-white text-gray-900 font-sans antialiased">
+        <OfflineBanner />
         <PairingGuard>
           <main className="max-w-lg mx-auto min-h-screen pb-20 px-4">
             {children}
