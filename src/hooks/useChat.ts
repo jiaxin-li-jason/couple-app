@@ -29,6 +29,7 @@ export function useChat() {
   const bottomRef = useRef<HTMLDivElement>(null);
   const userIdRef = useRef('');
 
+  // Step 1: Load current user + partner info
   useEffect(() => {
     getCurrentUser().then(async (u) => {
       if (u) {
@@ -54,9 +55,22 @@ export function useChat() {
     });
   }, []);
 
+  // Step 2: Fetch messages after userId is known
   useEffect(() => {
-    fetchMessages();
+    if (!userId) return;
+    supabase
+      .from('messages')
+      .select('*')
+      .order('created_at', { ascending: true })
+      .limit(200)
+      .then(({ data }) => {
+        if (data) setMessages(data);
+        setLoading(false);
+      });
+  }, [userId]);
 
+  // Step 3: Realtime subscription (once, uses ref for userId)
+  useEffect(() => {
     const channel = supabase
       .channel('chat')
       .on('postgres_changes', {
@@ -64,8 +78,8 @@ export function useChat() {
         schema: 'public',
         table: 'messages',
       }, (payload) => {
-        setMessages((prev) => [...prev, payload.new as Message]);
         const msg = payload.new as Message;
+        setMessages((prev) => [...prev, msg]);
         if (msg.sender_id !== userIdRef.current) {
           supabase.from('messages').update({ read: true }).eq('id', msg.id).then(() => {});
           if (msg.type === 'text') {
@@ -80,17 +94,7 @@ export function useChat() {
     return () => {
       supabase.removeChannel(channel);
     };
-  }, []); // 只订阅一次，回调中用 userIdRef 避免闭包陈旧
-
-  const fetchMessages = async () => {
-    const { data } = await supabase
-      .from('messages')
-      .select('*')
-      .order('created_at', { ascending: true })
-      .limit(200);
-    if (data) setMessages(data);
-    setLoading(false);
-  };
+  }, []);
 
   const sendText = useCallback(async (text: string) => {
     if (!text.trim()) return;
