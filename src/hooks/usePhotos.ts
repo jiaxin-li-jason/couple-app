@@ -84,5 +84,11 @@ export function usePhotos() {
     await fetchPhotos();
   }, [fetchPhotos]);
 
-  return { photos, loading, uploadPhotos, deletePhoto, refresh: fetchPhotos };
+  const updatePhoto = useCallback(async (id: string, updates: { caption?: string }) => {
+    const { error } = await supabase.from('photos').update(updates).eq('id', id);
+    if (error) throw error;
+    await fetchPhotos();
+  }, [fetchPhotos]);
+
+  return { photos, loading, uploadPhotos, deletePhoto, updatePhoto, refresh: fetchPhotos };
 }

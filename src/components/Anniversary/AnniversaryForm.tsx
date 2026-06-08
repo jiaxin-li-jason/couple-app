@@ -47,13 +47,14 @@ export default function AnniversaryForm({ onSubmit }: Props) {
           <div className="absolute inset-0 bg-black/20 backdrop-blur-sm" onClick={() => setShow(false)} />
 
           {/* 表单卡片 */}
-          <div className="relative w-full max-w-lg bg-white rounded-3xl rounded-b-none px-6 pt-6 pb-[calc(2.5rem+env(safe-area-inset-bottom,0px))] animate-slide-up">
-            {/* 拖拽指示条 */}
-            <div className="w-10 h-1 bg-gray-200 rounded-full mx-auto mb-5" />
+          <div className="relative w-full max-w-lg bg-white rounded-3xl rounded-b-none animate-slide-up max-h-[90vh] flex flex-col">
+            <div className="px-6 pt-6 shrink-0">
+              {/* 拖拽指示条 */}
+              <div className="w-10 h-1 bg-gray-200 rounded-full mx-auto mb-5" />
+              <h3 className="text-base font-bold text-gray-800 text-center mb-5">添加纪念日</h3>
+            </div>
 
-            <h3 className="text-base font-bold text-gray-800 text-center mb-5">添加纪念日</h3>
-
-            <div className="space-y-4">
+            <div className="flex-1 overflow-y-auto px-6 space-y-4">
               <input
                 value={title}
                 onChange={(e) => setTitle(e.target.value)}
@@ -87,8 +88,10 @@ export default function AnniversaryForm({ onSubmit }: Props) {
                   ))}
                 </div>
               </div>
+            </div>
 
-              <div className="flex gap-3 pt-1">
+            <div className="shrink-0 px-6 pt-4 pb-[calc(2.5rem+env(safe-area-inset-bottom,0px))]">
+              <div className="flex gap-3">
                 <button
                   onClick={() => setShow(false)}
                   className="flex-1 bg-gray-100 text-gray-500 py-3 rounded-xl text-sm font-medium active:scale-[0.98] transition-all"

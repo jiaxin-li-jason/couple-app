@@ -28,6 +28,9 @@ export default function PhotoDetail({ photo, groupPhotos, currentIndex, onNaviga
   const [likeCount, setLikeCount] = useState(0);
   const [commentText, setCommentText] = useState('');
   const [userId, setUserId] = useState('');
+  const [userMap, setUserMap] = useState<Record<string, { nickname: string; avatar_url: string | null }>>({});
+  const [editingCaption, setEditingCaption] = useState(false);
+  const [newCaption, setNewCaption] = useState(photo.caption || '');
   const touchStart = useRef(0);
   const containerRef = useRef<HTMLDivElement>(null);
 
@@ -41,6 +44,17 @@ export default function PhotoDetail({ photo, groupPhotos, currentIndex, onNaviga
 
     const { data: cmts } = await supabase.from('comments').select('*').eq('photo_id', photo.id).order('created_at', { ascending: true });
     setComments(cmts || []);
+
+    // Fetch user info for all comment authors
+    const userIds = (cmts || []).map(c => c.user_id).filter((id, i, arr) => arr.indexOf(id) === i);
+    if (userIds.length > 0) {
+      const { data: users } = await supabase.from('users').select('id, nickname, avatar_url').in('id', userIds);
+      if (users) {
+        const map: Record<string, { nickname: string; avatar_url: string | null }> = {};
+        users.forEach(u => { map[u.id] = { nickname: u.nickname, avatar_url: u.avatar_url }; });
+        setUserMap(map);
+      }
+    }
   }, [photo.id]);
 
   useEffect(() => { fetchMeta(); }, [fetchMeta]);
@@ -150,28 +164,52 @@ export default function PhotoDetail({ photo, groupPhotos, currentIndex, onNaviga
           <span className="text-gray-400">💬 {comments.length}</span>
         </div>
 
-        <button
-          onClick={async () => {
-            if (window.confirm('确定要删除这张照片吗？')) {
-              const { supabase } = await import('@/lib/supabase');
-              await supabase.from('photos').delete().eq('id', photo.id);
-              toast.success('已删除');
-              router.back();
-            }
-          }}
-          className="w-full py-2.5 text-sm text-red-400 border border-red-200 rounded-lg hover:bg-red-50 transition-colors"
-        >
-          删除照片
-        </button>
+        <div className="space-y-2">
+          <button
+            onClick={() => {
+              setNewCaption(photo.caption || '');
+              setEditingCaption(true);
+            }}
+            className="w-full py-2.5 text-sm text-gray-600 border border-gray-200 rounded-lg hover:bg-gray-50 transition-colors"
+          >
+            编辑文案
+          </button>
+          <button
+            onClick={async () => {
+              if (window.confirm('确定要删除这张照片吗？')) {
+                const { supabase } = await import('@/lib/supabase');
+                await supabase.from('photos').delete().eq('id', photo.id);
+                toast.success('已删除');
+                router.back();
+              }
+            }}
+            className="w-full py-2.5 text-sm text-red-400 border border-red-200 rounded-lg hover:bg-red-50 transition-colors"
+          >
+            删除照片
+          </button>
+        </div>
 
         {comments.length > 0 && (
           <div className="space-y-3 pt-2">
-            {comments.map((c) => (
-              <div key={c.id} className="bg-white rounded-lg px-4 py-2.5 border border-gray-100">
-                <p className="text-sm text-gray-700">{c.text}</p>
-                <p className="text-xs text-gray-400 mt-1">{formatDate(c.created_at)}</p>
-              </div>
-            ))}
+            {comments.map((c) => {
+              const user = userMap[c.user_id];
+              return (
+                <div key={c.id} className="bg-white rounded-lg px-4 py-2.5 border border-gray-100">
+                  <div className="flex items-center gap-2 mb-1.5">
+                    {user?.avatar_url ? (
+                      <img src={user.avatar_url} alt="" className="w-6 h-6 rounded-full object-cover" />
+                    ) : (
+                      <div className="w-6 h-6 rounded-full bg-gray-200 flex items-center justify-center text-[10px] text-gray-500">
+                        {user?.nickname?.charAt(0) || '?'}
+                      </div>
+                    )}
+                    <span className="text-xs font-medium text-gray-600">{user?.nickname || '匿名'}</span>
+                  </div>
+                  <p className="text-sm text-gray-700">{c.text}</p>
+                  <p className="text-xs text-gray-400 mt-1">{formatDate(c.created_at)}</p>
+                </div>
+              );
+            })}
           </div>
         )}
 
@@ -187,6 +225,42 @@ export default function PhotoDetail({ photo, groupPhotos, currentIndex, onNaviga
           </button>
         </div>
       </div>
+
+      {/* Edit Caption Modal */}
+      {editingCaption && (
+        <div className="fixed inset-0 z-50 flex items-end justify-center">
+          <div className="absolute inset-0 bg-black/20 backdrop-blur-sm" onClick={() => setEditingCaption(false)} />
+          <div className="relative w-full max-w-lg bg-white rounded-3xl rounded-b-none px-6 pt-6 pb-[calc(2.5rem+env(safe-area-inset-bottom,0px))] animate-slide-up">
+            <div className="w-10 h-1 bg-gray-200 rounded-full mx-auto mb-5" />
+            <h3 className="text-base font-bold text-gray-800 text-center mb-5">编辑文案</h3>
+            <div className="space-y-4">
+              <textarea
+                value={newCaption}
+                onChange={(e) => setNewCaption(e.target.value)}
+                placeholder="写一句话..."
+                rows={3}
+                className="w-full bg-gray-50 border border-gray-200 rounded-xl px-4 py-3 text-sm outline-none focus:border-amber-300 focus:bg-white transition-all resize-none"
+              />
+              <div className="flex gap-3 pt-1">
+                <button onClick={() => setEditingCaption(false)} className="flex-1 bg-gray-100 text-gray-500 py-3 rounded-xl text-sm font-medium active:scale-[0.98] transition-all">
+                  取消
+                </button>
+                <button
+                  onClick={async () => {
+                    await supabase.from('photos').update({ caption: newCaption }).eq('id', photo.id);
+                    toast.success('已更新');
+                    setEditingCaption(false);
+                    router.refresh();
+                  }}
+                  className="flex-1 bg-gradient-to-r from-amber-400 to-amber-500 text-white py-3 rounded-xl text-sm font-medium active:scale-[0.98] transition-all shadow-sm shadow-amber-200/50"
+                >
+                  保存
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }
