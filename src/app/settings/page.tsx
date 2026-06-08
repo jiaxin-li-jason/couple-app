@@ -81,8 +81,14 @@ export default function SettingsPage() {
   if (loading) return <div className="pt-6 py-20 text-center text-gray-400">加载中...</div>;
 
   return (
-    <div className="pt-6 space-y-6">
-      <h1 className="text-lg font-bold text-gray-900">设置</h1>
+    <div className="h-full flex flex-col pt-6">
+      {/* 固定标题 */}
+      <div className="shrink-0">
+        <h1 className="text-lg font-bold text-gray-900">设置</h1>
+      </div>
+
+      {/* 可滚动内容 */}
+      <div className="flex-1 overflow-y-auto min-h-0 pb-24 mt-6 space-y-6">
 
       {/* 头像 + 昵称 */}
       <div className="flex flex-col items-center py-4">
@@ -188,6 +194,7 @@ export default function SettingsPage() {
       {/* 版本信息 */}
       <div className="text-center pt-8">
         <p className="text-xs text-gray-400">我们的空间 v1.0</p>
+      </div>
       </div>
     </div>
   );

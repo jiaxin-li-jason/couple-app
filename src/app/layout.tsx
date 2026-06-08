@@ -43,7 +43,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         <OfflineBanner />
         <PairingGuard>
           <NotificationInit />
-          <main className="max-w-lg mx-auto h-full overflow-y-auto overscroll-none pb-20 px-4" style={{ WebkitOverflowScrolling: 'touch' }}>
+          <main className="max-w-lg mx-auto h-full flex flex-col px-4">
             {children}
           </main>
           <TabBar />

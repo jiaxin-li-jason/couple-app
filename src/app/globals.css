@@ -19,12 +19,6 @@ body {
   background-color: #F8F7F4;
 }
 
-/* 内部滚动容器 */
-#__next {
-  height: 100%;
-  overflow: hidden;
-}
-
 /* 隐藏滚动条 */
 ::-webkit-scrollbar {
   width: 0;

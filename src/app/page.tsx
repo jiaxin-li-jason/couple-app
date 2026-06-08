@@ -48,39 +48,40 @@ export default function HomePage() {
   }
 
   return (
-    <div className="space-y-5 pt-8">
-      {/* 问候与日期 */}
-      <Greeting />
-
-      {/* Hero 区 */}
-      <div className="bg-amber-50/80 rounded-3xl px-6 py-8 text-center border border-amber-100/60">
-        <p className="text-xs text-amber-400/80 tracking-[0.2em] uppercase font-medium mb-2">
-          Every day with you
-        </p>
-        <p className="text-2xl font-bold text-amber-800/90 leading-snug">
-          珍惜每一个
-          <br />
-          特别的日子
-        </p>
+    <div className="h-full flex flex-col pt-8">
+      {/* 固定上半部分 */}
+      <div className="shrink-0 space-y-5">
+        <Greeting />
+        <div className="bg-amber-50/80 rounded-3xl px-6 py-8 text-center border border-amber-100/60">
+          <p className="text-xs text-amber-400/80 tracking-[0.2em] uppercase font-medium mb-2">
+            Every day with you
+          </p>
+          <p className="text-2xl font-bold text-amber-800/90 leading-snug">
+            珍惜每一个
+            <br />
+            特别的日子
+          </p>
+        </div>
+        <DaysCounter days={daysTogether} loveDate={loveDate} />
+        <SweetQuote />
       </div>
 
-      <DaysCounter days={daysTogether} loveDate={loveDate} />
-      <SweetQuote />
-      <CountdownList
-        anniversaries={anniversaries}
-        onDelete={async (id) => {
-          await deleteAnniversary(id);
-          toast.success('已删除');
-        }}
-      />
-      <AnniversaryForm
-        onSubmit={async (title, date, type) => {
-          await addAnniversary(title, date, type);
-          toast.success('纪念日已添加！');
-        }}
-      />
-      {/* 底部留白，防止浮动按钮遮挡内容 */}
-      <div className="h-20" />
+      {/* 可滚动下半部分 */}
+      <div className="flex-1 overflow-y-auto min-h-0 pb-24 mt-5 space-y-5">
+        <CountdownList
+          anniversaries={anniversaries}
+          onDelete={async (id) => {
+            await deleteAnniversary(id);
+            toast.success('已删除');
+          }}
+        />
+        <AnniversaryForm
+          onSubmit={async (title, date, type) => {
+            await addAnniversary(title, date, type);
+            toast.success('纪念日已添加！');
+          }}
+        />
+      </div>
     </div>
   );
 }

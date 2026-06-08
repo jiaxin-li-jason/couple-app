@@ -16,21 +16,21 @@ export default function ChatPage() {
   }
 
   return (
-    <div className="flex flex-col" style={{ minHeight: 'calc(100vh - 80px)' }}>
-      {/* 顶部标题 */}
+    <div className="h-full flex flex-col">
+      {/* 固定顶部标题 */}
       <div className="shrink-0 pb-2 pt-2">
         <div className="h-1 w-16 bg-gradient-to-r from-blue-400 to-cyan-300 rounded-full mb-3" />
         <h1 className="text-lg font-bold text-gray-900">我们的聊天</h1>
         <p className="text-gray-500 text-xs mt-0.5">分享每一个甜蜜瞬间</p>
       </div>
 
-      {/* 消息列表 */}
-      <div className="flex-1 min-h-0">
+      {/* 可滚动消息列表 */}
+      <div className="flex-1 overflow-y-auto min-h-0">
         <MessageList messages={messages} userId={userId} userInfo={userInfo} partnerInfo={partnerInfo} />
       </div>
 
-      {/* 输入框 - sticky 底部 */}
-      <div className="sticky bottom-[80px] z-20 -mx-4 px-4 pt-2 pb-2 bg-[#F8F7F4] border-t border-gray-100">
+      {/* 固定底部输入框 */}
+      <div className="shrink-0 border-t border-gray-100 py-2">
         <ChatInput
           onSendText={sendText}
           onSendImage={async (file) => {
