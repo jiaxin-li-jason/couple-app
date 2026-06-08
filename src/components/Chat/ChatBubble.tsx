@@ -23,19 +23,23 @@ function DefaultAvatar({ name }: { name: string }) {
   );
 }
 
+function Avatar({ info, fallback }: { info?: UserInfo | null; fallback: string }) {
+  if (info?.avatar_url) {
+    return <img src={info.avatar_url} alt="" className="w-8 h-8 rounded-full object-cover shrink-0" />;
+  }
+  return <DefaultAvatar name={info?.nickname || fallback} />;
+}
+
 export default function ChatBubble({ message, isMine, userInfo, partnerInfo }: Props) {
   const info = isMine ? userInfo : partnerInfo;
 
   return (
-    <div className={`flex mb-3 gap-2 ${isMine ? 'justify-end' : 'justify-start'}`}>
-      {!isMine && (
-        info?.avatar_url ? (
-          <img src={info.avatar_url} alt="" className="w-8 h-8 rounded-full object-cover shrink-0 self-end" />
-        ) : (
-          <DefaultAvatar name={info?.nickname || 'TA'} />
-        )
-      )}
-      <div className={`max-w-[75%] ${isMine ? 'order-1' : ''}`}>
+    <div className={`flex mb-3 gap-2 items-end ${isMine ? 'flex-row-reverse' : 'flex-row'}`}>
+      {/* Avatar */}
+      <Avatar info={info} fallback={isMine ? '我' : 'TA'} />
+
+      {/* Message content */}
+      <div className="max-w-[75%]">
         {!isMine && info?.nickname && (
           <p className="text-xs text-gray-400 mb-1 ml-1">{info.nickname}</p>
         )}
@@ -63,13 +67,6 @@ export default function ChatBubble({ message, isMine, userInfo, partnerInfo }: P
           {isMine && message.read && <span className="text-xs text-rose-400">已读</span>}
         </div>
       </div>
-      {isMine && (
-        info?.avatar_url ? (
-          <img src={info.avatar_url} alt="" className="w-8 h-8 rounded-full object-cover shrink-0 self-end" />
-        ) : (
-          <DefaultAvatar name={info?.nickname || '我'} />
-        )
-      )}
     </div>
   );
 }
