@@ -1,6 +1,44 @@
 'use client';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useAuth } from '@/hooks/useAuth';
+
+function FloatingHearts() {
+  const [hearts, setHearts] = useState<{ id: number; left: string; delay: string; size: string }[]>([]);
+
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setHearts((prev) => [
+        ...prev.slice(-5),
+        {
+          id: Date.now(),
+          left: `${Math.random() * 100}%`,
+          delay: `${Math.random() * 2}s`,
+          size: `${12 + Math.random() * 16}px`,
+        },
+      ]);
+    }, 800);
+    return () => clearInterval(interval);
+  }, []);
+
+  return (
+    <>
+      {hearts.map((h) => (
+        <span
+          key={h.id}
+          className="heart-float"
+          style={{
+            left: h.left,
+            animationDelay: h.delay,
+            fontSize: h.size,
+            bottom: '-20px',
+          }}
+        >
+          ❤️
+        </span>
+      ))}
+    </>
+  );
+}
 
 export default function PairingGuard({ children }: { children: React.ReactNode }) {
   const { loading, paired, generateCode, pair } = useAuth();
@@ -10,36 +48,40 @@ export default function PairingGuard({ children }: { children: React.ReactNode }
 
   if (loading) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-white">
-        <p className="text-gray-400">加载中...</p>
+      <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-rose-300 via-pink-400 to-rose-500">
+        <p className="text-white/80 text-lg animate-pulse">加载中...</p>
       </div>
     );
   }
 
   if (!paired) {
     return (
-      <div className="min-h-screen flex flex-col items-center justify-center bg-white p-6">
-        <h1 className="text-2xl font-bold text-gray-800 mb-2">我们的空间 💑</h1>
-        <p className="text-gray-500 text-sm mb-8">先和你的另一半配对吧</p>
+      <div className="min-h-screen flex flex-col items-center justify-center bg-gradient-to-br from-rose-400 via-pink-500 to-rose-600 p-6 relative overflow-hidden">
+        <FloatingHearts />
 
-        <div className="w-full max-w-sm space-y-6">
+        <div className="relative z-10 text-center mb-8 animate-fade-in-up">
+          <h1 className="text-3xl font-bold text-white mb-2">我们的空间 💑</h1>
+          <p className="text-rose-100 text-sm">先和你的另一半配对吧</p>
+        </div>
+
+        <div className="w-full max-w-sm space-y-4 relative z-10">
           {/* 创建配对码 */}
-          <div className="bg-gray-50 rounded-2xl p-6">
-            <h2 className="text-sm font-semibold text-gray-700 mb-3">我还没配对</h2>
+          <div className="glass rounded-3xl p-6">
+            <h2 className="text-sm font-semibold text-rose-700 mb-3">我还没配对</h2>
             <button
               onClick={async () => {
                 const c = await generateCode();
                 setMyCode(c);
               }}
-              className="w-full bg-primary-500 text-white py-3 rounded-xl font-medium active:scale-95 transition-transform"
+              className="w-full bg-gradient-to-r from-rose-400 to-pink-500 text-white py-3 rounded-xl font-medium active:scale-95 transition-transform shadow-lg shadow-rose-500/30"
             >
               生成配对码
             </button>
             {myCode && (
-              <div className="mt-3 text-center">
-                <p className="text-gray-500 text-xs mb-1">你的配对码</p>
+              <div className="mt-4 text-center animate-fade-in-up">
+                <p className="text-rose-300 text-xs mb-1">你的配对码</p>
                 <p
-                  className="text-3xl font-bold tracking-widest text-primary-600 cursor-pointer"
+                  className="text-3xl font-bold tracking-widest text-white cursor-pointer"
                   onClick={() => {
                     navigator.clipboard.writeText(myCode);
                     setCopied(true);
@@ -47,15 +89,15 @@ export default function PairingGuard({ children }: { children: React.ReactNode }
                 >
                   {myCode}
                 </p>
-                {copied && <p className="text-green-500 text-xs mt-1">已复制！</p>}
-                <p className="text-gray-400 text-xs mt-2">发送给你的另一半</p>
+                {copied && <p className="text-green-300 text-xs mt-1">已复制！</p>}
+                <p className="text-rose-200 text-xs mt-2">发送给你的另一半</p>
               </div>
             )}
           </div>
 
           {/* 输入配对码 */}
-          <div className="bg-gray-50 rounded-2xl p-6">
-            <h2 className="text-sm font-semibold text-gray-700 mb-3">我有配对码</h2>
+          <div className="glass rounded-3xl p-6">
+            <h2 className="text-sm font-semibold text-rose-700 mb-3">我有配对码</h2>
             <input
               type="text"
               inputMode="numeric"
@@ -63,7 +105,7 @@ export default function PairingGuard({ children }: { children: React.ReactNode }
               value={code}
               onChange={(e) => setCode(e.target.value.replace(/\D/g, ''))}
               placeholder="输入6位配对码"
-              className="w-full border border-gray-200 rounded-xl px-4 py-3 text-center text-2xl tracking-widest outline-none focus:border-primary-400"
+              className="w-full bg-white/20 border border-white/30 rounded-xl px-4 py-3 text-center text-2xl tracking-widest outline-none text-white placeholder-rose-200 focus:border-white/50 backdrop-blur"
             />
             <button
               onClick={async () => {
@@ -72,7 +114,7 @@ export default function PairingGuard({ children }: { children: React.ReactNode }
                 if (!ok) alert('配对码无效，请检查');
               }}
               disabled={code.length !== 6}
-              className="w-full mt-3 bg-love-400 text-white py-3 rounded-xl font-medium disabled:opacity-40 active:scale-95 transition-transform"
+              className="w-full mt-3 bg-gradient-to-r from-rose-400 to-pink-500 text-white py-3 rounded-xl font-medium disabled:opacity-40 active:scale-95 transition-transform shadow-lg shadow-rose-500/30"
             >
               绑定
             </button>

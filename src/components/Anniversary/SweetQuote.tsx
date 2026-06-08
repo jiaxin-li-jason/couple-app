@@ -15,7 +15,6 @@ export default function SweetQuote() {
   const [quote, setQuote] = useState('');
 
   useEffect(() => {
-    // 每天切换一句（基于日期取余）
     const dayOfYear = Math.floor(
       (Date.now() - new Date(new Date().getFullYear(), 0, 0).getTime()) /
         (1000 * 60 * 60 * 24)
@@ -26,8 +25,8 @@ export default function SweetQuote() {
   if (!quote) return null;
 
   return (
-    <div className="bg-primary-50 rounded-2xl px-4 py-3 text-center">
-      <p className="text-primary-700 text-sm">{quote}</p>
+    <div className="bg-white rounded-2xl px-4 py-3 shadow-sm border-l-4 border-rose-400 animate-fade-in-up">
+      <p className="text-rose-600 text-sm">{quote}</p>
     </div>
   );
 }

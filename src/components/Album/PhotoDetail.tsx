@@ -65,45 +65,45 @@ export default function PhotoDetail({ photo }: Props) {
   };
 
   return (
-    <div className="min-h-screen bg-white">
-      <div className="sticky top-0 bg-white/90 backdrop-blur flex items-center px-4 py-3 border-b border-gray-100 z-10">
-        <button onClick={() => router.back()} className="text-gray-500 mr-4">← 返回</button>
-        <span className="text-sm font-medium">{formatDate(photo.created_at)}</span>
+    <div className="min-h-screen bg-rose-50">
+      <div className="sticky top-0 bg-white/90 backdrop-blur flex items-center px-4 py-3 border-b border-rose-100 z-10">
+        <button onClick={() => router.back()} className="text-rose-400 mr-4 font-medium">← 返回</button>
+        <span className="text-sm font-medium text-gray-500">{formatDate(photo.created_at)}</span>
       </div>
 
-      <img src={photo.image_url} alt={photo.caption} className="w-full aspect-square object-cover" />
+      <div className="bg-white">
+        <img src={photo.image_url} alt={photo.caption} className="w-full aspect-square object-cover" />
+      </div>
 
       <div className="p-4 space-y-4">
-        {photo.caption && <p className="text-gray-700">{photo.caption}</p>}
+        {photo.caption && <p className="text-gray-700 font-medium">{photo.caption}</p>}
 
         <div className="flex items-center gap-4">
-          <button onClick={toggleLike} className={`text-lg ${liked ? 'text-love-400' : 'text-gray-400'}`}>
+          <button onClick={toggleLike} className={`text-lg ${liked ? 'text-rose-500' : 'text-gray-400'}`}>
             {liked ? '❤️' : '🤍'} {likeCount}
           </button>
-          <span className="text-gray-300">💬 {comments.length}</span>
+          <span className="text-gray-400">💬 {comments.length}</span>
         </div>
 
-        {/* 评论列表 */}
         {comments.length > 0 && (
           <div className="space-y-3 pt-2">
             {comments.map((c) => (
-              <div key={c.id} className="bg-gray-50 rounded-xl px-4 py-2.5">
+              <div key={c.id} className="bg-white rounded-xl px-4 py-2.5 shadow-sm border border-rose-100">
                 <p className="text-sm text-gray-700">{c.text}</p>
-                <p className="text-xs text-gray-400 mt-1">{formatDate(c.created_at)}</p>
+                <p className="text-xs text-rose-300 mt-1">{formatDate(c.created_at)}</p>
               </div>
             ))}
           </div>
         )}
 
-        {/* 发送评论 */}
         <div className="flex gap-2 pt-2">
           <input
             value={commentText}
             onChange={(e) => setCommentText(e.target.value)}
             placeholder="写评论..."
-            className="flex-1 border border-gray-200 rounded-xl px-4 py-2.5 outline-none focus:border-primary-400 text-sm"
+            className="flex-1 bg-white border border-rose-200 rounded-xl px-4 py-2.5 outline-none focus:border-rose-400 text-sm"
           />
-          <button onClick={addComment} className="bg-primary-500 text-white px-4 py-2.5 rounded-xl text-sm font-medium">
+          <button onClick={addComment} className="bg-gradient-to-r from-rose-400 to-pink-500 text-white px-4 py-2.5 rounded-xl text-sm font-medium shadow-lg shadow-rose-500/20">
             发送
           </button>
         </div>

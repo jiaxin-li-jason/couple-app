@@ -41,31 +41,31 @@ export default function SettingsPage() {
     else toast.error('配对码无效');
   };
 
-  if (loading) return <div className="pt-6 py-20 text-center text-gray-400">加载中...</div>;
+  if (loading) return <div className="pt-6 py-20 text-center text-rose-300">加载中...</div>;
 
   return (
     <div className="pt-6 space-y-6">
-      <h1 className="text-lg font-bold text-gray-800">设置</h1>
+      <h1 className="text-lg font-bold text-rose-600">设置</h1>
 
       {/* 昵称 */}
-      <div className="space-y-2">
-        <label className="text-sm font-medium text-gray-600">昵称</label>
+      <div className="bg-white rounded-2xl p-4 space-y-3 shadow-sm border border-rose-100">
+        <label className="text-sm font-medium text-rose-600">昵称</label>
         <div className="flex gap-2">
           <input
             value={nickname}
             onChange={(e) => setNickname(e.target.value)}
-            className="flex-1 border border-gray-200 rounded-xl px-4 py-2.5 outline-none focus:border-primary-400"
+            className="flex-1 bg-rose-50 border border-rose-200 rounded-xl px-4 py-2.5 outline-none focus:border-rose-400 focus:bg-white transition-colors"
           />
-          <button onClick={updateNickname} className="bg-primary-500 text-white px-4 py-2.5 rounded-xl text-sm">
+          <button onClick={updateNickname} className="bg-gradient-to-r from-rose-400 to-pink-500 text-white px-4 py-2.5 rounded-xl text-sm shadow-lg shadow-rose-500/20">
             保存
           </button>
         </div>
       </div>
 
       {/* 配对状态 */}
-      <div className="space-y-2">
-        <label className="text-sm font-medium text-gray-600">配对状态</label>
-        <p className={`text-sm ${paired ? 'text-green-500' : 'text-gray-400'}`}>
+      <div className="bg-white rounded-2xl p-4 space-y-3 shadow-sm border border-rose-100">
+        <label className="text-sm font-medium text-rose-600">配对状态</label>
+        <p className={`text-sm ${paired ? 'text-green-500' : 'text-rose-400'}`}>
           {paired ? '✅ 已配对' : '⚠️ 未配对'}
         </p>
       </div>
@@ -73,16 +73,15 @@ export default function SettingsPage() {
       {/* 配对操作 */}
       {!paired && (
         <div className="space-y-4">
-          {/* 生成配对码 */}
-          <div className="bg-gray-50 rounded-2xl p-4 space-y-3">
-            <p className="text-sm font-medium text-gray-600">生成配对码</p>
-            <button onClick={handleGenerateCode} className="bg-primary-500 text-white w-full py-2.5 rounded-xl text-sm">
+          <div className="bg-white rounded-2xl p-4 space-y-3 shadow-sm border border-rose-100">
+            <p className="text-sm font-medium text-rose-600">生成配对码</p>
+            <button onClick={handleGenerateCode} className="bg-gradient-to-r from-rose-400 to-pink-500 text-white w-full py-2.5 rounded-xl text-sm shadow-lg shadow-rose-500/20">
               生成
             </button>
             {pairCode && (
-              <div className="text-center">
+              <div className="text-center animate-fade-in-up">
                 <p
-                  className="text-3xl font-bold tracking-widest text-primary-600 cursor-pointer"
+                  className="text-3xl font-bold tracking-widest text-rose-500 cursor-pointer"
                   onClick={() => { navigator.clipboard.writeText(pairCode); setCopied(true); }}
                 >
                   {pairCode}
@@ -92,18 +91,17 @@ export default function SettingsPage() {
             )}
           </div>
 
-          {/* 输入对方配对码 */}
-          <div className="bg-gray-50 rounded-2xl p-4 space-y-3">
-            <p className="text-sm font-medium text-gray-600">输入TA的配对码</p>
+          <div className="bg-white rounded-2xl p-4 space-y-3 shadow-sm border border-rose-100">
+            <p className="text-sm font-medium text-rose-600">输入TA的配对码</p>
             <input
               value={inputCode}
               onChange={(e) => setInputCode(e.target.value.replace(/\D/g, ''))}
               placeholder="6位数字"
               inputMode="numeric"
               maxLength={6}
-              className="w-full border border-gray-200 rounded-xl px-4 py-3 text-center text-2xl tracking-widest outline-none focus:border-primary-400"
+              className="w-full bg-rose-50 border border-rose-200 rounded-xl px-4 py-3 text-center text-2xl tracking-widest outline-none focus:border-rose-400 focus:bg-white transition-colors"
             />
-            <button onClick={handlePair} disabled={inputCode.length !== 6} className="w-full bg-love-400 text-white py-2.5 rounded-xl text-sm disabled:opacity-40">
+            <button onClick={handlePair} disabled={inputCode.length !== 6} className="w-full bg-gradient-to-r from-rose-400 to-pink-500 text-white py-2.5 rounded-xl text-sm disabled:opacity-40 shadow-lg shadow-rose-500/20">
               绑定
             </button>
           </div>
@@ -112,7 +110,7 @@ export default function SettingsPage() {
 
       {/* 版本信息 */}
       <div className="text-center pt-8">
-        <p className="text-xs text-gray-300">我们的空间 v1.0</p>
+        <p className="text-xs text-rose-300">我们的空间 v1.0</p>
       </div>
     </div>
   );

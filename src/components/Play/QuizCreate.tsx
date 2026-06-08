@@ -36,22 +36,22 @@ export default function QuizCreate({ onCreated }: Props) {
 
   if (!show) {
     return (
-      <button onClick={() => setShow(true)} className="w-full py-3 border-2 border-dashed border-gray-200 rounded-xl text-gray-400 text-sm">
+      <button onClick={() => setShow(true)} className="w-full py-3 border-2 border-dashed border-rose-200 rounded-xl text-rose-400 text-sm hover:border-rose-400 transition-colors">
         + 给TA出题
       </button>
     );
   }
 
   return (
-    <div className="bg-gray-50 rounded-2xl p-4 space-y-3">
-      <input value={question} onChange={(e) => setQuestion(e.target.value)} placeholder="题目" className="w-full bg-white border border-gray-200 rounded-xl px-4 py-3 outline-none focus:border-primary-400 text-sm" />
+    <div className="bg-white rounded-2xl p-4 space-y-3 shadow-sm border border-rose-100">
+      <input value={question} onChange={(e) => setQuestion(e.target.value)} placeholder="题目" className="w-full bg-rose-50 border border-rose-200 rounded-xl px-4 py-3 outline-none focus:border-rose-400 focus:bg-white transition-colors text-sm" />
       {options.map((opt, i) => (
         <div key={i} className="flex items-center gap-2">
           <input
             type="radio"
             checked={correctIndex === i}
             onChange={() => setCorrectIndex(i)}
-            className="accent-primary-500"
+            className="accent-rose-500"
           />
           <input
             value={opt}
@@ -61,14 +61,14 @@ export default function QuizCreate({ onCreated }: Props) {
               setOptions(next);
             }}
             placeholder={`选项 ${i + 1}`}
-            className="flex-1 bg-white border border-gray-200 rounded-xl px-4 py-2.5 outline-none focus:border-primary-400 text-sm"
+            className="flex-1 bg-rose-50 border border-rose-200 rounded-xl px-4 py-2.5 outline-none focus:border-rose-400 focus:bg-white transition-colors text-sm"
           />
         </div>
       ))}
       <p className="text-xs text-gray-400">选择正确答案旁边的圆点</p>
       <div className="flex gap-2">
-        <button onClick={handleSubmit} className="flex-1 bg-primary-500 text-white py-2.5 rounded-xl text-sm font-medium">出题</button>
-        <button onClick={() => setShow(false)} className="flex-1 bg-white text-gray-400 py-2.5 rounded-xl text-sm">取消</button>
+        <button onClick={handleSubmit} className="flex-1 bg-gradient-to-r from-rose-400 to-pink-500 text-white py-2.5 rounded-xl text-sm font-medium shadow-lg shadow-rose-500/20">出题</button>
+        <button onClick={() => setShow(false)} className="flex-1 bg-gray-100 text-gray-400 py-2.5 rounded-xl text-sm">取消</button>
       </div>
     </div>
   );

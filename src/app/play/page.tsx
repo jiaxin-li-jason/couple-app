@@ -12,17 +12,22 @@ export default function PlayPage() {
   const refresh = useCallback(() => setRefreshKey((k) => k + 1), []);
 
   return (
-    <div className="pt-6 space-y-6" key={refreshKey}>
-      <h1 className="text-lg font-bold text-gray-800">互动广场</h1>
+    <div className="space-y-6" key={refreshKey}>
+      <div className="bg-gradient-to-r from-rose-400 to-pink-500 -mx-4 px-4 pt-6 pb-4">
+        <h1 className="text-lg font-bold text-white">互动广场</h1>
+        <p className="text-rose-100 text-xs mt-0.5">让爱更有趣</p>
+      </div>
 
       <DailyQuestion />
 
       <section className="space-y-3">
+        <h2 className="text-sm font-semibold text-rose-400">📝 情侣问答</h2>
         <QuizAnswer />
         <QuizCreate onCreated={refresh} />
       </section>
 
       <section className="space-y-3">
+        <h2 className="text-sm font-semibold text-rose-400">🎯 打卡挑战</h2>
         <ChallengeList />
         <ChallengeForm onCreated={refresh} />
       </section>

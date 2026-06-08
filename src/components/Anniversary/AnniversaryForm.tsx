@@ -28,7 +28,7 @@ export default function AnniversaryForm({ onSubmit }: Props) {
     return (
       <button
         onClick={() => setShow(true)}
-        className="w-full py-3 border-2 border-dashed border-gray-200 rounded-xl text-gray-400 text-sm active:border-primary-300 active:text-primary-400"
+        className="w-full py-3 border-2 border-dashed border-rose-200 rounded-xl text-rose-400 text-sm active:border-rose-400 active:text-rose-500 transition-colors"
       >
         + 添加纪念日
       </button>
@@ -36,28 +36,28 @@ export default function AnniversaryForm({ onSubmit }: Props) {
   }
 
   return (
-    <div className="bg-gray-50 rounded-2xl p-4 space-y-3">
+    <div className="bg-white rounded-2xl p-4 space-y-3 shadow-sm border border-rose-100">
       <input
         value={title}
         onChange={(e) => setTitle(e.target.value)}
         placeholder="纪念日名称"
-        className="w-full bg-white border border-gray-200 rounded-xl px-4 py-3 outline-none focus:border-primary-400"
+        className="w-full bg-rose-50 border border-rose-200 rounded-xl px-4 py-3 outline-none focus:border-rose-400 focus:bg-white transition-colors"
       />
       <input
         type="date"
         value={date}
         onChange={(e) => setDate(e.target.value)}
-        className="w-full bg-white border border-gray-200 rounded-xl px-4 py-3 outline-none focus:border-primary-400"
+        className="w-full bg-rose-50 border border-rose-200 rounded-xl px-4 py-3 outline-none focus:border-rose-400 focus:bg-white transition-colors"
       />
-      <div className="flex gap-2">
+      <div className="flex gap-2 flex-wrap">
         {types.map((t) => (
           <button
             key={t.value}
             onClick={() => setType(t.value)}
             className={`px-3 py-1.5 rounded-lg text-xs ${
               type === t.value
-                ? 'bg-primary-100 text-primary-700 font-medium'
-                : 'bg-white text-gray-500'
+                ? 'bg-rose-100 text-rose-700 font-medium'
+                : 'bg-rose-50 text-gray-500'
             }`}
           >
             {t.label}
@@ -67,13 +67,13 @@ export default function AnniversaryForm({ onSubmit }: Props) {
       <div className="flex gap-2">
         <button
           onClick={handleSubmit}
-          className="flex-1 bg-primary-500 text-white py-2.5 rounded-xl font-medium"
+          className="flex-1 bg-gradient-to-r from-rose-400 to-pink-500 text-white py-2.5 rounded-xl font-medium shadow-lg shadow-rose-500/20"
         >
           保存
         </button>
         <button
           onClick={() => setShow(false)}
-          className="flex-1 bg-white text-gray-400 py-2.5 rounded-xl"
+          className="flex-1 bg-gray-100 text-gray-400 py-2.5 rounded-xl"
         >
           取消
         </button>
