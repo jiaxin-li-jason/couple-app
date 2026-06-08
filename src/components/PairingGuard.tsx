@@ -103,7 +103,7 @@ export default function PairingGuard({ children }: { children: React.ReactNode }
         <FloatingHearts />
         <div className="relative z-10 text-center mb-8 animate-fade-in-up">
           <h1 className="text-3xl font-bold text-white mb-2">我们的空间 💑</h1>
-          <p className="text-rose-100 text-sm">登录或注册，开始你们的专属空间</p>
+          <p className="text-white/90 text-base">登录或注册，开始你们的专属空间</p>
         </div>
 
         <div className="w-full max-w-sm relative z-10">
@@ -112,20 +112,20 @@ export default function PairingGuard({ children }: { children: React.ReactNode }
             <div className="flex bg-white/10 rounded-xl p-1 mb-5">
               <button
                 onClick={() => { setTab('login'); setError(''); }}
-                className={`flex-1 py-2 rounded-lg text-sm font-medium transition-colors ${tab === 'login' ? 'bg-white text-rose-600 shadow-sm' : 'text-rose-100'}`}
+                className={`flex-1 py-2.5 rounded-lg text-sm font-medium transition-colors ${tab === 'login' ? 'bg-white text-rose-600 shadow-sm' : 'text-white/80'}`}
               >
                 登录
               </button>
               <button
                 onClick={() => { setTab('register'); setError(''); }}
-                className={`flex-1 py-2 rounded-lg text-sm font-medium transition-colors ${tab === 'register' ? 'bg-white text-rose-600 shadow-sm' : 'text-rose-100'}`}
+                className={`flex-1 py-2.5 rounded-lg text-sm font-medium transition-colors ${tab === 'register' ? 'bg-white text-rose-600 shadow-sm' : 'text-white/80'}`}
               >
                 注册
               </button>
             </div>
 
             {error && (
-              <p className={`text-center text-sm mb-3 ${error === '注册成功，请登录' ? 'text-green-300' : 'text-rose-200'}`}>
+              <p className={`text-center text-sm mb-3 font-medium ${error === '注册成功，请登录' ? 'text-green-200' : 'text-white'}`}>
                 {error}
               </p>
             )}
@@ -138,7 +138,7 @@ export default function PairingGuard({ children }: { children: React.ReactNode }
                   onChange={(e) => setEmail(e.target.value)}
                   onKeyDown={(e) => e.key === 'Enter' && handleLogin()}
                   placeholder="邮箱"
-                  className="w-full bg-white/20 border border-white/30 rounded-xl px-4 py-3 text-center text-white outline-none placeholder-rose-200 focus:border-white/50 backdrop-blur"
+                  className="w-full bg-white/20 border border-white/30 rounded-xl px-4 py-3 text-center text-white outline-none placeholder-white/60 focus:border-white/50 backdrop-blur"
                 />
                 <input
                   type="password"
@@ -146,7 +146,7 @@ export default function PairingGuard({ children }: { children: React.ReactNode }
                   onChange={(e) => setPassword(e.target.value)}
                   onKeyDown={(e) => e.key === 'Enter' && handleLogin()}
                   placeholder="密码"
-                  className="w-full bg-white/20 border border-white/30 rounded-xl px-4 py-3 text-center text-white outline-none placeholder-rose-200 focus:border-white/50 backdrop-blur"
+                  className="w-full bg-white/20 border border-white/30 rounded-xl px-4 py-3 text-center text-white outline-none placeholder-white/60 focus:border-white/50 backdrop-blur"
                 />
                 <button
                   onClick={handleLogin}
@@ -164,7 +164,7 @@ export default function PairingGuard({ children }: { children: React.ReactNode }
                   onChange={(e) => setEmail(e.target.value)}
                   onKeyDown={(e) => e.key === 'Enter' && handleRegister()}
                   placeholder="邮箱"
-                  className="w-full bg-white/20 border border-white/30 rounded-xl px-4 py-3 text-center text-white outline-none placeholder-rose-200 focus:border-white/50 backdrop-blur"
+                  className="w-full bg-white/20 border border-white/30 rounded-xl px-4 py-3 text-center text-white outline-none placeholder-white/60 focus:border-white/50 backdrop-blur"
                 />
                 <input
                   type="password"
@@ -172,7 +172,7 @@ export default function PairingGuard({ children }: { children: React.ReactNode }
                   onChange={(e) => setPassword(e.target.value)}
                   onKeyDown={(e) => e.key === 'Enter' && handleRegister()}
                   placeholder="密码"
-                  className="w-full bg-white/20 border border-white/30 rounded-xl px-4 py-3 text-center text-white outline-none placeholder-rose-200 focus:border-white/50 backdrop-blur"
+                  className="w-full bg-white/20 border border-white/30 rounded-xl px-4 py-3 text-center text-white outline-none placeholder-white/60 focus:border-white/50 backdrop-blur"
                 />
                 <input
                   type="password"
@@ -180,7 +180,7 @@ export default function PairingGuard({ children }: { children: React.ReactNode }
                   onChange={(e) => setConfirmPassword(e.target.value)}
                   onKeyDown={(e) => e.key === 'Enter' && handleRegister()}
                   placeholder="确认密码"
-                  className="w-full bg-white/20 border border-white/30 rounded-xl px-4 py-3 text-center text-white outline-none placeholder-rose-200 focus:border-white/50 backdrop-blur"
+                  className="w-full bg-white/20 border border-white/30 rounded-xl px-4 py-3 text-center text-white outline-none placeholder-white/60 focus:border-white/50 backdrop-blur"
                 />
                 <button
                   onClick={handleRegister}
@@ -205,12 +205,12 @@ export default function PairingGuard({ children }: { children: React.ReactNode }
 
         <div className="relative z-10 text-center mb-8 animate-fade-in-up">
           <h1 className="text-3xl font-bold text-white mb-2">我们的空间 💑</h1>
-          <p className="text-rose-100 text-sm">先和你的另一半配对吧</p>
+          <p className="text-white/90 text-base">先和你的另一半配对吧</p>
         </div>
 
         <div className="w-full max-w-sm space-y-4 relative z-10">
           <div className="glass rounded-3xl p-6">
-            <h2 className="text-sm font-semibold text-rose-700 mb-3">我还没配对</h2>
+            <h2 className="text-base font-semibold text-white mb-3">我还没配对</h2>
             <button
               onClick={async () => {
                 const c = await generateCode();
@@ -222,7 +222,7 @@ export default function PairingGuard({ children }: { children: React.ReactNode }
             </button>
             {myCode && (
               <div className="mt-4 text-center animate-fade-in-up">
-                <p className="text-rose-300 text-xs mb-1">你的配对码</p>
+                <p className="text-white/80 text-sm mb-1">你的配对码</p>
                 <p
                   className="text-3xl font-bold tracking-widest text-white cursor-pointer"
                   onClick={() => {
@@ -232,14 +232,14 @@ export default function PairingGuard({ children }: { children: React.ReactNode }
                 >
                   {myCode}
                 </p>
-                {copied && <p className="text-green-300 text-xs mt-1">已复制！</p>}
-                <p className="text-rose-200 text-xs mt-2">发送给你的另一半</p>
+                {copied && <p className="text-green-200 text-sm mt-1">已复制！</p>}
+                <p className="text-white/70 text-sm mt-2">发送给你的另一半</p>
               </div>
             )}
           </div>
 
           <div className="glass rounded-3xl p-6">
-            <h2 className="text-sm font-semibold text-rose-700 mb-3">我有配对码</h2>
+            <h2 className="text-base font-semibold text-white mb-3">我有配对码</h2>
             <input
               type="text"
               inputMode="numeric"
@@ -247,7 +247,7 @@ export default function PairingGuard({ children }: { children: React.ReactNode }
               value={code}
               onChange={(e) => setCode(e.target.value.replace(/\D/g, ''))}
               placeholder="输入6位配对码"
-              className="w-full bg-white/20 border border-white/30 rounded-xl px-4 py-3 text-center text-2xl tracking-widest outline-none text-white placeholder-rose-200 focus:border-white/50 backdrop-blur"
+              className="w-full bg-white/20 border border-white/30 rounded-xl px-4 py-3 text-center text-2xl tracking-widest outline-none text-white placeholder-white/60 focus:border-white/50 backdrop-blur"
             />
             <button
               onClick={async () => {
