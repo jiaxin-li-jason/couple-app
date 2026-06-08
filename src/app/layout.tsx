@@ -39,11 +39,11 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
           rel="stylesheet"
         />
       </head>
-      <body className="bg-[#F8F7F4] text-gray-900 font-sans antialiased">
+      <body className="bg-[#F8F7F4] text-gray-900 font-sans antialiased h-full overflow-hidden">
         <OfflineBanner />
         <PairingGuard>
           <NotificationInit />
-          <main className="max-w-lg mx-auto min-h-screen pb-20 px-4">
+          <main className="max-w-lg mx-auto h-full overflow-y-auto overscroll-none pb-20 px-4" style={{ WebkitOverflowScrolling: 'touch' }}>
             {children}
           </main>
           <TabBar />
