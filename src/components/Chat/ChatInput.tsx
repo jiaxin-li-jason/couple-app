@@ -18,7 +18,7 @@ export default function ChatInput({ onSendText, onSendImage }: Props) {
   };
 
   return (
-    <div className="border-t border-gray-200 pt-2 pb-safe bg-white">
+    <div className="py-2">
       {showImagePicker && (
         <ImagePicker
           onPick={async (file) => {

@@ -8,24 +8,37 @@ export default function ChatPage() {
   const { messages, userId, userInfo, partnerInfo, loading, sendText, sendImage } = useChat();
 
   if (loading) {
-    return <div className="pt-6 text-center text-gray-400 py-20">加载中...</div>;
+    return (
+      <div className="flex items-center justify-center h-[60vh]">
+        <p className="text-gray-400">加载中...</p>
+      </div>
+    );
   }
 
   return (
-    <div className="pt-0 h-[calc(100vh-8rem)] flex flex-col">
-      <div className="pb-3 pt-6">
+    <div className="flex flex-col" style={{ minHeight: 'calc(100vh - 80px)' }}>
+      {/* 顶部标题 */}
+      <div className="shrink-0 pb-2 pt-2">
         <div className="h-1 w-16 bg-gradient-to-r from-blue-400 to-cyan-300 rounded-full mb-3" />
         <h1 className="text-lg font-bold text-gray-900">我们的聊天</h1>
         <p className="text-gray-500 text-xs mt-0.5">分享每一个甜蜜瞬间</p>
       </div>
-      <MessageList messages={messages} userId={userId} userInfo={userInfo} partnerInfo={partnerInfo} />
-      <ChatInput
-        onSendText={sendText}
-        onSendImage={async (file) => {
-          await sendImage(file);
-          toast.success('图片已发送');
-        }}
-      />
+
+      {/* 消息列表 */}
+      <div className="flex-1 min-h-0">
+        <MessageList messages={messages} userId={userId} userInfo={userInfo} partnerInfo={partnerInfo} />
+      </div>
+
+      {/* 输入框 - sticky 底部 */}
+      <div className="sticky bottom-[80px] z-20 -mx-4 px-4 pt-2 pb-2 bg-[#F8F7F4] border-t border-gray-100">
+        <ChatInput
+          onSendText={sendText}
+          onSendImage={async (file) => {
+            await sendImage(file);
+            toast.success('图片已发送');
+          }}
+        />
+      </div>
     </div>
   );
 }
