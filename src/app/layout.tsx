@@ -2,6 +2,7 @@ import type { Metadata, Viewport } from 'next';
 import './globals.css';
 import TabBar from '@/components/TabBar';
 import PairingGuard from '@/components/PairingGuard';
+import NotificationInit from '@/components/NotificationInit';
 import OfflineBanner from '@/components/OfflineBanner';
 import { Toaster } from 'react-hot-toast';
 
@@ -41,6 +42,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
       <body className="bg-rose-50 text-gray-900 font-sans antialiased">
         <OfflineBanner />
         <PairingGuard>
+          <NotificationInit />
           <main className="max-w-lg mx-auto min-h-screen pb-20 px-4">
             {children}
           </main>

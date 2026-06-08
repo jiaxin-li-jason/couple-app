@@ -2,6 +2,7 @@
 import { useState, useEffect, useCallback } from 'react';
 import { supabase } from '@/lib/supabase';
 import { getCurrentUser } from '@/lib/auth';
+import { scheduleAnniversaryCheck } from '@/lib/notifications';
 
 export interface Anniversary {
   id: string;
@@ -70,6 +71,7 @@ export function useAnniversaries() {
       }
 
       setAnniversaries(enriched);
+      scheduleAnniversaryCheck(data.map((a) => ({ title: a.title, date: a.date })));
     }
     setLoading(false);
   }, [processDates]);

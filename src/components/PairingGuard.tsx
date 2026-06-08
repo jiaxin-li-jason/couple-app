@@ -41,24 +41,50 @@ function FloatingHearts() {
 }
 
 export default function PairingGuard({ children }: { children: React.ReactNode }) {
-  const { loading, user, userProfile, paired, signIn, generateCode, pair } = useAuth();
+  const { loading, user, userProfile, paired, signInPassword, signUp, generateCode, pair } = useAuth();
+  const [tab, setTab] = useState<'login' | 'register'>('login');
   const [email, setEmail] = useState('');
-  const [emailSent, setEmailSent] = useState(false);
-  const [sending, setSending] = useState(false);
+  const [password, setPassword] = useState('');
+  const [confirmPassword, setConfirmPassword] = useState('');
+  const [submitting, setSubmitting] = useState(false);
+  const [error, setError] = useState('');
   const [code, setCode] = useState('');
   const [myCode, setMyCode] = useState('');
   const [copied, setCopied] = useState(false);
 
-  const handleSendLink = async () => {
-    if (!email.trim()) return;
-    setSending(true);
+  const handleLogin = async () => {
+    if (!email.trim() || !password.trim()) return;
+    setSubmitting(true);
+    setError('');
     try {
-      await signIn(email.trim());
-      setEmailSent(true);
-    } catch {
-      // ignore
+      await signInPassword(email.trim(), password);
+    } catch (err: any) {
+      setError(err.message || '登录失败，请检查邮箱和密码');
     } finally {
-      setSending(false);
+      setSubmitting(false);
+    }
+  };
+
+  const handleRegister = async () => {
+    if (!email.trim() || !password.trim()) return;
+    if (password !== confirmPassword) {
+      setError('两次密码不一致');
+      return;
+    }
+    if (password.length < 6) {
+      setError('密码至少 6 位');
+      return;
+    }
+    setSubmitting(true);
+    setError('');
+    try {
+      await signUp(email.trim(), password);
+      setTab('login');
+      setError('注册成功，请登录');
+    } catch (err: any) {
+      setError(err.message || '注册失败');
+    } finally {
+      setSubmitting(false);
     }
   };
 
@@ -70,48 +96,103 @@ export default function PairingGuard({ children }: { children: React.ReactNode }
     );
   }
 
-  // 未登录 → 邮箱登录界面
+  // 未登录 → 邮箱+密码界面
   if (!user) {
     return (
       <div className="min-h-screen flex flex-col items-center justify-center bg-gradient-to-br from-rose-400 via-pink-500 to-rose-600 p-6 relative overflow-hidden">
         <FloatingHearts />
         <div className="relative z-10 text-center mb-8 animate-fade-in-up">
           <h1 className="text-3xl font-bold text-white mb-2">我们的空间 💑</h1>
-          <p className="text-rose-100 text-sm">输入邮箱，接收登录链接</p>
+          <p className="text-rose-100 text-sm">登录或注册，开始你们的专属空间</p>
         </div>
 
-        {emailSent ? (
-          <div className="w-full max-w-sm relative z-10 text-center animate-fade-in-up">
-            <div className="glass rounded-3xl p-8">
-              <div className="text-5xl mb-4">📧</div>
-              <p className="text-white font-semibold mb-2">登录链接已发送</p>
-              <p className="text-rose-200 text-sm">
-                请检查你的邮箱 <span className="text-white font-medium">{email}</span>
-              </p>
-              <p className="text-rose-200 text-xs mt-4">链接有效期为 10 分钟</p>
-            </div>
-          </div>
-        ) : (
-          <div className="w-full max-w-sm relative z-10">
-            <div className="glass rounded-3xl p-6">
-              <input
-                type="email"
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-                onKeyDown={(e) => e.key === 'Enter' && handleSendLink()}
-                placeholder="输入你的邮箱"
-                className="w-full bg-white/20 border border-white/30 rounded-xl px-4 py-3 text-center text-white outline-none placeholder-rose-200 focus:border-white/50 backdrop-blur"
-              />
+        <div className="w-full max-w-sm relative z-10">
+          <div className="glass rounded-3xl p-6">
+            {/* Tab 切换 */}
+            <div className="flex bg-white/10 rounded-xl p-1 mb-5">
               <button
-                onClick={handleSendLink}
-                disabled={!email.trim() || sending}
-                className="w-full mt-3 bg-gradient-to-r from-rose-400 to-pink-500 text-white py-3 rounded-xl font-medium disabled:opacity-40 active:scale-95 transition-transform shadow-lg shadow-rose-500/30"
+                onClick={() => { setTab('login'); setError(''); }}
+                className={`flex-1 py-2 rounded-lg text-sm font-medium transition-colors ${tab === 'login' ? 'bg-white text-rose-600 shadow-sm' : 'text-rose-100'}`}
               >
-                {sending ? '发送中...' : '发送登录链接'}
+                登录
+              </button>
+              <button
+                onClick={() => { setTab('register'); setError(''); }}
+                className={`flex-1 py-2 rounded-lg text-sm font-medium transition-colors ${tab === 'register' ? 'bg-white text-rose-600 shadow-sm' : 'text-rose-100'}`}
+              >
+                注册
               </button>
             </div>
+
+            {error && (
+              <p className={`text-center text-sm mb-3 ${error === '注册成功，请登录' ? 'text-green-300' : 'text-rose-200'}`}>
+                {error}
+              </p>
+            )}
+
+            {tab === 'login' ? (
+              <div className="space-y-3">
+                <input
+                  type="email"
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                  onKeyDown={(e) => e.key === 'Enter' && handleLogin()}
+                  placeholder="邮箱"
+                  className="w-full bg-white/20 border border-white/30 rounded-xl px-4 py-3 text-center text-white outline-none placeholder-rose-200 focus:border-white/50 backdrop-blur"
+                />
+                <input
+                  type="password"
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
+                  onKeyDown={(e) => e.key === 'Enter' && handleLogin()}
+                  placeholder="密码"
+                  className="w-full bg-white/20 border border-white/30 rounded-xl px-4 py-3 text-center text-white outline-none placeholder-rose-200 focus:border-white/50 backdrop-blur"
+                />
+                <button
+                  onClick={handleLogin}
+                  disabled={!email.trim() || !password.trim() || submitting}
+                  className="w-full bg-gradient-to-r from-rose-400 to-pink-500 text-white py-3 rounded-xl font-medium disabled:opacity-40 active:scale-95 transition-transform shadow-lg shadow-rose-500/30"
+                >
+                  {submitting ? '登录中...' : '登录'}
+                </button>
+              </div>
+            ) : (
+              <div className="space-y-3">
+                <input
+                  type="email"
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                  onKeyDown={(e) => e.key === 'Enter' && handleRegister()}
+                  placeholder="邮箱"
+                  className="w-full bg-white/20 border border-white/30 rounded-xl px-4 py-3 text-center text-white outline-none placeholder-rose-200 focus:border-white/50 backdrop-blur"
+                />
+                <input
+                  type="password"
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
+                  onKeyDown={(e) => e.key === 'Enter' && handleRegister()}
+                  placeholder="密码"
+                  className="w-full bg-white/20 border border-white/30 rounded-xl px-4 py-3 text-center text-white outline-none placeholder-rose-200 focus:border-white/50 backdrop-blur"
+                />
+                <input
+                  type="password"
+                  value={confirmPassword}
+                  onChange={(e) => setConfirmPassword(e.target.value)}
+                  onKeyDown={(e) => e.key === 'Enter' && handleRegister()}
+                  placeholder="确认密码"
+                  className="w-full bg-white/20 border border-white/30 rounded-xl px-4 py-3 text-center text-white outline-none placeholder-rose-200 focus:border-white/50 backdrop-blur"
+                />
+                <button
+                  onClick={handleRegister}
+                  disabled={!email.trim() || !password.trim() || !confirmPassword.trim() || submitting}
+                  className="w-full bg-gradient-to-r from-rose-400 to-pink-500 text-white py-3 rounded-xl font-medium disabled:opacity-40 active:scale-95 transition-transform shadow-lg shadow-rose-500/30"
+                >
+                  {submitting ? '注册中...' : '注册'}
+                </button>
+              </div>
+            )}
           </div>
-        )}
+        </div>
       </div>
     );
   }

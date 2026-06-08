@@ -7,6 +7,8 @@ import {
   createPairCode,
   joinWithCode,
   signInWithEmail,
+  signInWithPassword,
+  signUpWithEmail,
   signOut as authSignOut,
 } from '@/lib/auth';
 import type { User } from '@supabase/supabase-js';
@@ -64,6 +66,14 @@ export function useAuth() {
     await signInWithEmail(email);
   }, []);
 
+  const signInPassword = useCallback(async (email: string, password: string) => {
+    await signInWithPassword(email, password);
+  }, []);
+
+  const signUp = useCallback(async (email: string, password: string) => {
+    await signUpWithEmail(email, password);
+  }, []);
+
   const signOut = useCallback(async () => {
     await authSignOut();
   }, []);
@@ -81,5 +91,5 @@ export function useAuth() {
     return ok;
   }, []);
 
-  return { ...state, signIn, signOut, generateCode, pair };
+  return { ...state, signIn, signInPassword, signUp, signOut, generateCode, pair };
 }

@@ -2,6 +2,7 @@
 import { useState, useEffect, useCallback, useRef } from 'react';
 import { supabase } from '@/lib/supabase';
 import { getCurrentUser } from '@/lib/auth';
+import { sendLocalNotification } from '@/lib/notifications';
 import imageCompression from 'browser-image-compression';
 
 export interface Message {
@@ -39,6 +40,13 @@ export function useChat() {
         const msg = payload.new as Message;
         if (msg.sender_id !== userId) {
           supabase.from('messages').update({ read: true }).eq('id', msg.id).then(() => {});
+          if (msg.type === 'text') {
+            sendLocalNotification('新消息', msg.content);
+          } else if (msg.type === 'image') {
+            sendLocalNotification('新消息', '[图片]');
+          } else if (msg.type === 'voice') {
+            sendLocalNotification('新消息', '[语音]');
+          }
         }
       })
       .subscribe();

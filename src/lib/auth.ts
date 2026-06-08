@@ -1,6 +1,20 @@
 import { supabase } from './supabase';
 
-/** 邮箱登录（发送 Magic Link） */
+/** 邮箱+密码注册 */
+export async function signUpWithEmail(email: string, password: string) {
+  const { data, error } = await supabase.auth.signUp({ email, password });
+  if (error) throw error;
+  return data;
+}
+
+/** 邮箱+密码登录 */
+export async function signInWithPassword(email: string, password: string) {
+  const { data, error } = await supabase.auth.signInWithPassword({ email, password });
+  if (error) throw error;
+  return data;
+}
+
+/** 邮箱登录（发送 Magic Link）— 保留作为备选 */
 export async function signInWithEmail(email: string) {
   const { error } = await supabase.auth.signInWithOtp({
     email,
