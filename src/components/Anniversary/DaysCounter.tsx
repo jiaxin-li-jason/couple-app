@@ -5,14 +5,14 @@ interface Props {
 
 export default function DaysCounter({ days, loveDate }: Props) {
   return (
-    <div className="bg-gradient-rose rounded-3xl px-6 py-10 text-center shadow-lg shadow-rose-500/20 animate-fade-in-up">
-      <p className="text-rose-100 text-sm mb-2">我们已经在一起</p>
-      <p className="text-6xl font-bold text-white animate-pulse-heart">
+    <div className="bg-white rounded-xl border border-gray-200 px-6 py-8 text-center">
+      <p className="text-gray-500 text-sm mb-1">我们已经在一起</p>
+      <p className="text-5xl font-bold text-gray-900">
         {days}
-        <span className="text-xl text-rose-200 font-normal ml-2">天</span>
+        <span className="text-lg text-gray-400 font-normal ml-1">天</span>
       </p>
       {loveDate && (
-        <p className="text-rose-200 text-xs mt-3">
+        <p className="text-gray-400 text-xs mt-2">
           始于 {new Date(loveDate).toLocaleDateString('zh-CN')}
         </p>
       )}

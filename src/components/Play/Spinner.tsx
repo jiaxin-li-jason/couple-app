@@ -43,36 +43,36 @@ export default function Spinner() {
   };
 
   return (
-    <div className="bg-white border border-rose-100 rounded-2xl p-4 space-y-4 text-center shadow-sm">
-      <h3 className="text-sm font-semibold text-rose-500">🎡 真心话大冒险</h3>
+    <div className="bg-white border border-gray-200 rounded-xl p-4 space-y-4 text-center">
+      <h3 className="text-sm font-semibold text-gray-500">真心话大冒险</h3>
 
       <div className="flex justify-center gap-3">
         <button
           onClick={() => spin('truth')}
           disabled={spinning}
-          className="bg-gradient-to-r from-rose-400 to-pink-500 text-white px-6 py-3 rounded-full font-medium text-sm active:scale-95 transition-transform disabled:opacity-50 shadow-lg shadow-rose-500/20"
+          className="bg-amber-500 text-white px-6 py-3 rounded-full font-medium text-sm active:scale-95 transition-transform disabled:opacity-50"
         >
-          💬 真心话
+          真心话
         </button>
         <button
           onClick={() => spin('dare')}
           disabled={spinning}
-          className={"bg-gradient-to-r from-pink-400 to-rose-500 text-white px-6 py-3 rounded-full font-medium text-sm active:scale-95 transition-transform disabled:opacity-50 shadow-lg shadow-pink-500/20"}
+          className="bg-gray-700 text-white px-6 py-3 rounded-full font-medium text-sm active:scale-95 transition-transform disabled:opacity-50"
         >
-          ⚡ 大冒险
+          大冒险
         </button>
       </div>
 
       {spinning && (
-        <div className="animate-pulse-heart text-4xl">💖</div>
+        <div className="text-3xl animate-spin">✨</div>
       )}
 
       {result && !spinning && (
-        <div className="bg-gradient-to-br from-rose-50 to-pink-50 rounded-2xl px-4 py-6 animate-fade-in-up">
-          <p className="text-xs text-rose-400 mb-1">
-            {result.type === 'truth' ? '💬 真心话' : '⚡ 大冒险'}
+        <div className="bg-gray-50 rounded-xl px-4 py-6 animate-fade-in-up">
+          <p className="text-xs text-gray-500 mb-1">
+            {result.type === 'truth' ? '真心话' : '大冒险'}
           </p>
-          <p className="text-lg font-medium text-rose-800">{result.text}</p>
+          <p className="text-lg font-medium text-gray-800">{result.text}</p>
         </div>
       )}
     </div>

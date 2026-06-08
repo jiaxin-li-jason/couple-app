@@ -24,33 +24,33 @@ export default function AlbumPage() {
   const totalCount = photos.length;
 
   return (
-    <div className="space-y-4">
-      <div className="bg-gradient-to-r from-rose-400 to-pink-500 -mx-4 px-4 pt-6 pb-4">
+    <div className="space-y-4 pt-6">
+      <div className="pb-1">
         <div className="flex items-center justify-between">
           <div>
-            <h1 className="text-lg font-bold text-white">我们的回忆</h1>
-            <p className="text-rose-100 text-xs mt-0.5">记录每个美好瞬间</p>
+            <h1 className="text-lg font-bold text-gray-900">我们的回忆</h1>
+            <p className="text-gray-500 text-xs mt-0.5">记录每个美好瞬间</p>
           </div>
         </div>
         {!loading && totalCount > 0 && (
-          <p className="text-rose-100 text-xs mt-2 opacity-80">共 {totalCount} 张照片 · {grouped.length} 天</p>
+          <p className="text-gray-400 text-xs mt-1">共 {totalCount} 张照片 · {grouped.length} 天</p>
         )}
       </div>
 
       {loading ? (
-        <p className="text-center text-rose-300 py-20">加载中...</p>
+        <p className="text-center text-gray-400 py-20">加载中...</p>
       ) : totalCount === 0 ? (
         <div className="text-center py-20 space-y-4">
-          <div className="text-7xl animate-bounce">📸</div>
-          <p className="text-rose-300 text-lg font-medium">还没有照片</p>
-          <p className="text-rose-200 text-sm">点击右下角的 + 按钮上传第一张照片</p>
+          <div className="text-6xl text-gray-300">📸</div>
+          <p className="text-gray-500 text-base font-medium">还没有照片</p>
+          <p className="text-gray-400 text-sm">点击右下角的 + 按钮上传第一张照片</p>
         </div>
       ) : (
         <div className="space-y-6 pb-4">
           {grouped.map(([dateKey, groupPhotos]) => (
             <div key={dateKey}>
-              <h2 className="text-base font-bold text-gray-700 px-1 mb-3 flex items-center gap-2">
-                <span className="w-1 h-4 bg-gradient-to-b from-rose-400 to-pink-500 rounded-full inline-block" />
+              <h2 className="text-sm font-semibold text-gray-700 px-1 mb-2 flex items-center gap-2">
+                <span className="w-0.5 h-3.5 bg-amber-400 rounded-full inline-block" />
                 {formatDate(dateKey)}
                 <span className="text-xs text-gray-400 font-normal">{groupPhotos.length} 张</span>
               </h2>
@@ -62,7 +62,7 @@ export default function AlbumPage() {
                     href={`/album/${photo.id}`}
                     className="flex-shrink-0 w-72 snap-center"
                   >
-                    <div className="bg-white rounded-2xl shadow-sm overflow-hidden hover:shadow-md hover:-translate-y-0.5 transition-all duration-200">
+                    <div className="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden hover:shadow-md hover:-translate-y-0.5 transition-all duration-200">
                         <img
                           src={photo.image_url}
                           alt={photo.caption}
@@ -70,8 +70,8 @@ export default function AlbumPage() {
                           loading="lazy"
                         />
                       {photo.caption && (
-                        <div className="px-3 py-2.5">
-                          <p className="text-sm text-gray-700 line-clamp-2">{photo.caption}</p>
+                        <div className="px-3 py-2">
+                          <p className="text-sm text-gray-600 line-clamp-2">{photo.caption}</p>
                         </div>
                       )}
                     </div>

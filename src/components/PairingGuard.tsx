@@ -2,44 +2,6 @@
 import { useState } from 'react';
 import { useAuth } from '@/hooks/useAuth';
 
-function FloatingHearts() {
-  const [hearts, setHearts] = useState<{ id: number; left: string; delay: string; size: string }[]>([]);
-
-  useState(() => {
-    const interval = setInterval(() => {
-      setHearts((prev) => [
-        ...prev.slice(-5),
-        {
-          id: Date.now(),
-          left: `${Math.random() * 100}%`,
-          delay: `${Math.random() * 2}s`,
-          size: `${12 + Math.random() * 16}px`,
-        },
-      ]);
-    }, 800);
-    return () => clearInterval(interval);
-  });
-
-  return (
-    <>
-      {hearts.map((h) => (
-        <span
-          key={h.id}
-          className="heart-float"
-          style={{
-            left: h.left,
-            animationDelay: h.delay,
-            fontSize: h.size,
-            bottom: '-20px',
-          }}
-        >
-          ❤️
-        </span>
-      ))}
-    </>
-  );
-}
-
 export default function PairingGuard({ children }: { children: React.ReactNode }) {
   const { loading, user, userProfile, paired, signInPassword, signUp, generateCode, pair } = useAuth();
   const [tab, setTab] = useState<'login' | 'register'>('login');
@@ -90,8 +52,8 @@ export default function PairingGuard({ children }: { children: React.ReactNode }
 
   if (loading) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-rose-300 via-pink-400 to-rose-500">
-        <p className="text-white/80 text-lg animate-pulse">加载中...</p>
+      <div className="min-h-screen flex items-center justify-center bg-[#FAFAF8]">
+        <p className="text-gray-400 text-lg">加载中...</p>
       </div>
     );
   }
@@ -99,33 +61,32 @@ export default function PairingGuard({ children }: { children: React.ReactNode }
   // 未登录 → 邮箱+密码界面
   if (!user) {
     return (
-      <div className="min-h-screen flex flex-col items-center justify-center bg-gradient-to-br from-rose-400 via-pink-500 to-rose-600 p-6 relative overflow-hidden">
-        <FloatingHearts />
-        <div className="relative z-10 text-center mb-8 animate-fade-in-up">
-          <h1 className="text-3xl font-bold text-white mb-2">我们的空间 💑</h1>
-          <p className="text-white/90 text-base">登录或注册，开始你们的专属空间</p>
+      <div className="min-h-screen flex flex-col items-center justify-center bg-[#FAFAF8] p-6">
+        <div className="text-center mb-8 animate-fade-in-up">
+          <h1 className="text-2xl font-bold text-gray-900 mb-1">我们的空间</h1>
+          <p className="text-gray-500 text-sm">登录或注册，开始你们的专属空间</p>
         </div>
 
-        <div className="w-full max-w-sm relative z-10">
-          <div className="glass rounded-3xl p-6">
+        <div className="w-full max-w-sm">
+          <div className="bg-white rounded-xl border border-gray-200 p-5">
             {/* Tab 切换 */}
-            <div className="flex bg-white/10 rounded-xl p-1 mb-5">
+            <div className="flex bg-gray-100 rounded-lg p-0.5 mb-4">
               <button
                 onClick={() => { setTab('login'); setError(''); }}
-                className={`flex-1 py-2.5 rounded-lg text-sm font-medium transition-colors ${tab === 'login' ? 'bg-white text-rose-600 shadow-sm' : 'text-white/80'}`}
+                className={`flex-1 py-2 rounded-md text-sm font-medium transition-colors ${tab === 'login' ? 'bg-white text-gray-900 shadow-sm' : 'text-gray-500'}`}
               >
                 登录
               </button>
               <button
                 onClick={() => { setTab('register'); setError(''); }}
-                className={`flex-1 py-2.5 rounded-lg text-sm font-medium transition-colors ${tab === 'register' ? 'bg-white text-rose-600 shadow-sm' : 'text-white/80'}`}
+                className={`flex-1 py-2 rounded-md text-sm font-medium transition-colors ${tab === 'register' ? 'bg-white text-gray-900 shadow-sm' : 'text-gray-500'}`}
               >
                 注册
               </button>
             </div>
 
             {error && (
-              <p className={`text-center text-sm mb-3 font-medium ${error === '注册成功，请登录' ? 'text-green-200' : 'text-white'}`}>
+              <p className={`text-center text-sm mb-3 font-medium ${error === '注册成功，请登录' ? 'text-green-600' : 'text-red-500'}`}>
                 {error}
               </p>
             )}
@@ -138,7 +99,7 @@ export default function PairingGuard({ children }: { children: React.ReactNode }
                   onChange={(e) => setEmail(e.target.value)}
                   onKeyDown={(e) => e.key === 'Enter' && handleLogin()}
                   placeholder="邮箱"
-                  className="w-full bg-white/20 border border-white/30 rounded-xl px-4 py-3 text-center text-white outline-none placeholder-white/60 focus:border-white/50 backdrop-blur"
+                  className="w-full bg-white border border-gray-200 rounded-lg px-4 py-2.5 text-center text-gray-900 outline-none placeholder-gray-400 focus:border-amber-500 transition-colors text-sm"
                 />
                 <input
                   type="password"
@@ -146,12 +107,12 @@ export default function PairingGuard({ children }: { children: React.ReactNode }
                   onChange={(e) => setPassword(e.target.value)}
                   onKeyDown={(e) => e.key === 'Enter' && handleLogin()}
                   placeholder="密码"
-                  className="w-full bg-white/20 border border-white/30 rounded-xl px-4 py-3 text-center text-white outline-none placeholder-white/60 focus:border-white/50 backdrop-blur"
+                  className="w-full bg-white border border-gray-200 rounded-lg px-4 py-2.5 text-center text-gray-900 outline-none placeholder-gray-400 focus:border-amber-500 transition-colors text-sm"
                 />
                 <button
                   onClick={handleLogin}
                   disabled={!email.trim() || !password.trim() || submitting}
-                  className="w-full bg-gradient-to-r from-rose-400 to-pink-500 text-white py-3 rounded-xl font-medium disabled:opacity-40 active:scale-95 transition-transform shadow-lg shadow-rose-500/30"
+                  className="w-full bg-amber-500 text-white py-2.5 rounded-lg text-sm font-medium disabled:opacity-40 active:scale-[0.98] transition-all"
                 >
                   {submitting ? '登录中...' : '登录'}
                 </button>
@@ -164,7 +125,7 @@ export default function PairingGuard({ children }: { children: React.ReactNode }
                   onChange={(e) => setEmail(e.target.value)}
                   onKeyDown={(e) => e.key === 'Enter' && handleRegister()}
                   placeholder="邮箱"
-                  className="w-full bg-white/20 border border-white/30 rounded-xl px-4 py-3 text-center text-white outline-none placeholder-white/60 focus:border-white/50 backdrop-blur"
+                  className="w-full bg-white border border-gray-200 rounded-lg px-4 py-2.5 text-center text-gray-900 outline-none placeholder-gray-400 focus:border-amber-500 transition-colors text-sm"
                 />
                 <input
                   type="password"
@@ -172,7 +133,7 @@ export default function PairingGuard({ children }: { children: React.ReactNode }
                   onChange={(e) => setPassword(e.target.value)}
                   onKeyDown={(e) => e.key === 'Enter' && handleRegister()}
                   placeholder="密码"
-                  className="w-full bg-white/20 border border-white/30 rounded-xl px-4 py-3 text-center text-white outline-none placeholder-white/60 focus:border-white/50 backdrop-blur"
+                  className="w-full bg-white border border-gray-200 rounded-lg px-4 py-2.5 text-center text-gray-900 outline-none placeholder-gray-400 focus:border-amber-500 transition-colors text-sm"
                 />
                 <input
                   type="password"
@@ -180,12 +141,12 @@ export default function PairingGuard({ children }: { children: React.ReactNode }
                   onChange={(e) => setConfirmPassword(e.target.value)}
                   onKeyDown={(e) => e.key === 'Enter' && handleRegister()}
                   placeholder="确认密码"
-                  className="w-full bg-white/20 border border-white/30 rounded-xl px-4 py-3 text-center text-white outline-none placeholder-white/60 focus:border-white/50 backdrop-blur"
+                  className="w-full bg-white border border-gray-200 rounded-lg px-4 py-2.5 text-center text-gray-900 outline-none placeholder-gray-400 focus:border-amber-500 transition-colors text-sm"
                 />
                 <button
                   onClick={handleRegister}
                   disabled={!email.trim() || !password.trim() || !confirmPassword.trim() || submitting}
-                  className="w-full bg-gradient-to-r from-rose-400 to-pink-500 text-white py-3 rounded-xl font-medium disabled:opacity-40 active:scale-95 transition-transform shadow-lg shadow-rose-500/30"
+                  className="w-full bg-amber-500 text-white py-2.5 rounded-lg text-sm font-medium disabled:opacity-40 active:scale-[0.98] transition-all"
                 >
                   {submitting ? '注册中...' : '注册'}
                 </button>
@@ -200,31 +161,29 @@ export default function PairingGuard({ children }: { children: React.ReactNode }
   // 已登录但未配对 → 配对界面
   if (!paired) {
     return (
-      <div className="min-h-screen flex flex-col items-center justify-center bg-gradient-to-br from-rose-400 via-pink-500 to-rose-600 p-6 relative overflow-hidden">
-        <FloatingHearts />
-
-        <div className="relative z-10 text-center mb-8 animate-fade-in-up">
-          <h1 className="text-3xl font-bold text-white mb-2">我们的空间 💑</h1>
-          <p className="text-white/90 text-base">先和你的另一半配对吧</p>
+      <div className="min-h-screen flex flex-col items-center justify-center bg-[#FAFAF8] p-6">
+        <div className="text-center mb-8 animate-fade-in-up">
+          <h1 className="text-2xl font-bold text-gray-900 mb-1">我们的空间</h1>
+          <p className="text-gray-500 text-sm">先和你的另一半配对吧</p>
         </div>
 
-        <div className="w-full max-w-sm space-y-4 relative z-10">
-          <div className="glass rounded-3xl p-6">
-            <h2 className="text-base font-semibold text-white mb-3">我还没配对</h2>
+        <div className="w-full max-w-sm space-y-4">
+          <div className="bg-white rounded-xl border border-gray-200 p-5">
+            <h2 className="text-sm font-semibold text-gray-700 mb-3">我还没配对</h2>
             <button
               onClick={async () => {
                 const c = await generateCode();
                 setMyCode(c);
               }}
-              className="w-full bg-gradient-to-r from-rose-400 to-pink-500 text-white py-3 rounded-xl font-medium active:scale-95 transition-transform shadow-lg shadow-rose-500/30"
+              className="w-full bg-amber-500 text-white py-2.5 rounded-lg text-sm font-medium active:scale-[0.98] transition-all"
             >
               生成配对码
             </button>
             {myCode && (
               <div className="mt-4 text-center animate-fade-in-up">
-                <p className="text-white/80 text-sm mb-1">你的配对码</p>
+                <p className="text-gray-500 text-xs mb-1">你的配对码</p>
                 <p
-                  className="text-3xl font-bold tracking-widest text-white cursor-pointer"
+                  className="text-3xl font-bold tracking-widest text-amber-600 cursor-pointer"
                   onClick={() => {
                     navigator.clipboard.writeText(myCode);
                     setCopied(true);
@@ -232,14 +191,14 @@ export default function PairingGuard({ children }: { children: React.ReactNode }
                 >
                   {myCode}
                 </p>
-                {copied && <p className="text-green-200 text-sm mt-1">已复制！</p>}
-                <p className="text-white/70 text-sm mt-2">发送给你的另一半</p>
+                {copied && <p className="text-green-600 text-xs mt-1">已复制！</p>}
+                <p className="text-gray-400 text-xs mt-2">发送给你的另一半</p>
               </div>
             )}
           </div>
 
-          <div className="glass rounded-3xl p-6">
-            <h2 className="text-base font-semibold text-white mb-3">我有配对码</h2>
+          <div className="bg-white rounded-xl border border-gray-200 p-5">
+            <h2 className="text-sm font-semibold text-gray-700 mb-3">我有配对码</h2>
             <input
               type="text"
               inputMode="numeric"
@@ -247,7 +206,7 @@ export default function PairingGuard({ children }: { children: React.ReactNode }
               value={code}
               onChange={(e) => setCode(e.target.value.replace(/\D/g, ''))}
               placeholder="输入6位配对码"
-              className="w-full bg-white/20 border border-white/30 rounded-xl px-4 py-3 text-center text-2xl tracking-widest outline-none text-white placeholder-white/60 focus:border-white/50 backdrop-blur"
+              className="w-full bg-white border border-gray-200 rounded-lg px-4 py-2.5 text-center text-2xl tracking-widest outline-none text-gray-900 placeholder-gray-400 focus:border-amber-500 transition-colors"
             />
             <button
               onClick={async () => {
@@ -256,7 +215,7 @@ export default function PairingGuard({ children }: { children: React.ReactNode }
                 if (!ok) alert('配对码无效，请检查');
               }}
               disabled={code.length !== 6}
-              className="w-full mt-3 bg-gradient-to-r from-rose-400 to-pink-500 text-white py-3 rounded-xl font-medium disabled:opacity-40 active:scale-95 transition-transform shadow-lg shadow-rose-500/30"
+              className="w-full mt-3 bg-amber-500 text-white py-2.5 rounded-lg text-sm font-medium disabled:opacity-40 active:scale-[0.98] transition-all"
             >
               绑定
             </button>

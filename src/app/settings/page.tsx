@@ -78,11 +78,11 @@ export default function SettingsPage() {
     toast.success('已退出登录');
   };
 
-  if (loading) return <div className="pt-6 py-20 text-center text-rose-300">加载中...</div>;
+  if (loading) return <div className="pt-6 py-20 text-center text-gray-400">加载中...</div>;
 
   return (
     <div className="pt-6 space-y-6">
-      <h1 className="text-lg font-bold text-rose-600">设置</h1>
+      <h1 className="text-lg font-bold text-gray-900">设置</h1>
 
       {/* 头像 */}
       <div className="flex flex-col items-center">
@@ -99,7 +99,7 @@ export default function SettingsPage() {
         <button
           onClick={() => fileInputRef.current?.click()}
           disabled={uploading}
-          className="w-24 h-24 rounded-full overflow-hidden bg-gradient-to-br from-rose-300 to-pink-400 flex items-center justify-center text-white text-3xl font-bold shadow-lg shadow-rose-500/20 hover:opacity-80 transition-opacity disabled:opacity-50"
+          className="w-24 h-24 rounded-full overflow-hidden bg-gray-200 flex items-center justify-center text-gray-500 text-3xl font-bold hover:opacity-80 transition-opacity disabled:opacity-50"
         >
           {avatarUrl ? (
             <img src={avatarUrl} alt="avatar" className="w-full h-full object-cover" />
@@ -107,76 +107,76 @@ export default function SettingsPage() {
             <span>{nickname.charAt(0) || '?'}</span>
           )}
         </button>
-        <p className="text-xs text-rose-400 mt-2">{uploading ? '上传中...' : '点击更换头像'}</p>
+        <p className="text-xs text-gray-400 mt-2">{uploading ? '上传中...' : '点击更换头像'}</p>
       </div>
 
       {/* 当前账号 */}
-      <div className="bg-white rounded-2xl p-4 space-y-3 shadow-sm border border-rose-100">
-        <label className="text-sm font-medium text-rose-600">当前账号</label>
-        <p className="text-sm text-rose-400">{user?.email || '未知'}</p>
+      <div className="bg-white rounded-xl p-4 space-y-3 border border-gray-200">
+        <label className="text-sm font-medium text-gray-700">当前账号</label>
+        <p className="text-sm text-gray-500">{user?.email || '未知'}</p>
         <button
           onClick={handleSignOut}
-          className="w-full bg-gradient-to-r from-rose-400 to-pink-500 text-white py-2.5 rounded-xl text-sm shadow-lg shadow-rose-500/20"
+          className="w-full bg-gray-100 text-gray-600 py-2.5 rounded-lg text-sm hover:bg-gray-200 transition-colors"
         >
           退出登录
         </button>
       </div>
 
       {/* 昵称 */}
-      <div className="bg-white rounded-2xl p-4 space-y-3 shadow-sm border border-rose-100">
-        <label className="text-sm font-medium text-rose-600">昵称</label>
+      <div className="bg-white rounded-xl p-4 space-y-3 border border-gray-200">
+        <label className="text-sm font-medium text-gray-700">昵称</label>
         <div className="flex gap-2">
           <input
             value={nickname}
             onChange={(e) => setNickname(e.target.value)}
-            className="flex-1 bg-rose-50 border border-rose-200 rounded-xl px-4 py-2.5 outline-none focus:border-rose-400 focus:bg-white transition-colors"
+            className="flex-1 bg-white border border-gray-200 rounded-lg px-3 py-2 text-sm outline-none focus:border-amber-500 transition-colors"
           />
-          <button onClick={updateNickname} className="bg-gradient-to-r from-rose-400 to-pink-500 text-white px-4 py-2.5 rounded-xl text-sm shadow-lg shadow-rose-500/20">
+          <button onClick={updateNickname} className="bg-amber-500 text-white px-4 py-2 rounded-lg text-sm font-medium active:scale-[0.98] transition-all">
             保存
           </button>
         </div>
       </div>
 
       {/* 配对状态 */}
-      <div className="bg-white rounded-2xl p-4 space-y-3 shadow-sm border border-rose-100">
-        <label className="text-sm font-medium text-rose-600">配对状态</label>
-        <p className={`text-sm ${paired ? 'text-green-500' : 'text-rose-400'}`}>
-          {paired ? '✅ 已配对' : '⚠️ 未配对'}
+      <div className="bg-white rounded-xl p-4 space-y-3 border border-gray-200">
+        <label className="text-sm font-medium text-gray-700">配对状态</label>
+        <p className={`text-sm ${paired ? 'text-green-600' : 'text-gray-500'}`}>
+          {paired ? '已配对' : '未配对'}
         </p>
       </div>
 
       {/* 配对操作 */}
       {!paired && (
         <div className="space-y-4">
-          <div className="bg-white rounded-2xl p-4 space-y-3 shadow-sm border border-rose-100">
-            <p className="text-sm font-medium text-rose-600">生成配对码</p>
-            <button onClick={handleGenerateCode} className="bg-gradient-to-r from-rose-400 to-pink-500 text-white w-full py-2.5 rounded-xl text-sm shadow-lg shadow-rose-500/20">
+          <div className="bg-white rounded-xl p-4 space-y-3 border border-gray-200">
+            <p className="text-sm font-medium text-gray-700">生成配对码</p>
+            <button onClick={handleGenerateCode} className="bg-amber-500 text-white w-full py-2.5 rounded-lg text-sm font-medium active:scale-[0.98] transition-all">
               生成
             </button>
             {pairCode && (
               <div className="text-center animate-fade-in-up">
                 <p
-                  className="text-3xl font-bold tracking-widest text-rose-500 cursor-pointer"
+                  className="text-3xl font-bold tracking-widest text-amber-600 cursor-pointer"
                   onClick={() => { navigator.clipboard.writeText(pairCode); setCopied(true); }}
                 >
                   {pairCode}
                 </p>
-                {copied && <p className="text-green-500 text-xs mt-1">已复制！</p>}
+                {copied && <p className="text-green-600 text-xs mt-1">已复制！</p>}
               </div>
             )}
           </div>
 
-          <div className="bg-white rounded-2xl p-4 space-y-3 shadow-sm border border-rose-100">
-            <p className="text-sm font-medium text-rose-600">输入TA的配对码</p>
+          <div className="bg-white rounded-xl p-4 space-y-3 border border-gray-200">
+            <p className="text-sm font-medium text-gray-700">输入TA的配对码</p>
             <input
               value={inputCode}
               onChange={(e) => setInputCode(e.target.value.replace(/\D/g, ''))}
               placeholder="6位数字"
               inputMode="numeric"
               maxLength={6}
-              className="w-full bg-rose-50 border border-rose-200 rounded-xl px-4 py-3 text-center text-2xl tracking-widest outline-none focus:border-rose-400 focus:bg-white transition-colors"
+              className="w-full bg-white border border-gray-200 rounded-lg px-4 py-2.5 text-center text-2xl tracking-widest outline-none text-gray-900 placeholder-gray-400 focus:border-amber-500 transition-colors"
             />
-            <button onClick={handlePair} disabled={inputCode.length !== 6} className="w-full bg-gradient-to-r from-rose-400 to-pink-500 text-white py-2.5 rounded-xl text-sm disabled:opacity-40 shadow-lg shadow-rose-500/20">
+            <button onClick={handlePair} disabled={inputCode.length !== 6} className="w-full bg-amber-500 text-white py-2.5 rounded-lg text-sm font-medium disabled:opacity-40 active:scale-[0.98] transition-all">
               绑定
             </button>
           </div>
@@ -185,7 +185,7 @@ export default function SettingsPage() {
 
       {/* 版本信息 */}
       <div className="text-center pt-8">
-        <p className="text-xs text-rose-300">我们的空间 v1.0</p>
+        <p className="text-xs text-gray-400">我们的空间 v1.0</p>
       </div>
     </div>
   );

@@ -8,14 +8,14 @@ export default function ChatPage() {
   const { messages, userId, userInfo, partnerInfo, loading, sendText, sendImage } = useChat();
 
   if (loading) {
-    return <div className="pt-6 text-center text-rose-300 py-20">加载中...</div>;
+    return <div className="pt-6 text-center text-gray-400 py-20">加载中...</div>;
   }
 
   return (
     <div className="pt-0 h-[calc(100vh-8rem)] flex flex-col">
-      <div className="bg-gradient-to-r from-rose-400 to-pink-500 -mx-4 px-4 pt-6 pb-4 mb-3">
-        <h1 className="text-lg font-bold text-white">我们的聊天</h1>
-        <p className="text-rose-100 text-xs mt-0.5">分享每一个甜蜜瞬间</p>
+      <div className="pb-3 pt-6">
+        <h1 className="text-lg font-bold text-gray-900">我们的聊天</h1>
+        <p className="text-gray-500 text-xs mt-0.5">分享每一个甜蜜瞬间</p>
       </div>
       <MessageList messages={messages} userId={userId} userInfo={userInfo} partnerInfo={partnerInfo} />
       <ChatInput

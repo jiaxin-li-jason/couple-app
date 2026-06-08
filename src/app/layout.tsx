@@ -39,7 +39,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
           rel="stylesheet"
         />
       </head>
-      <body className="bg-rose-50 text-gray-900 font-sans antialiased">
+      <body className="bg-[#FAFAF8] text-gray-900 font-sans antialiased">
         <OfflineBanner />
         <PairingGuard>
           <NotificationInit />

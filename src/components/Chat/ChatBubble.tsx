@@ -10,7 +10,7 @@ interface Props {
 
 function DefaultAvatar({ name }: { name: string }) {
   const firstChar = name?.charAt(0) || '?';
-  const colors = ['#f472b6', '#fb7185', '#e879f9', '#818cf8', '#38bdf8', '#34d399', '#fbbf24'];
+  const colors = ['#f59e0b', '#6b7280', '#8b5cf6', '#38bdf8', '#34d399', '#f97316', '#ec4899'];
   const colorIndex = firstChar.charCodeAt(0) % colors.length;
 
   return (
@@ -35,10 +35,8 @@ export default function ChatBubble({ message, isMine, userInfo, partnerInfo }: P
 
   return (
     <div className={`flex mb-3 gap-2 items-end ${isMine ? 'flex-row-reverse' : 'flex-row'}`}>
-      {/* Avatar */}
       <Avatar info={info} fallback={isMine ? '我' : 'TA'} />
 
-      {/* Message content */}
       <div className="max-w-[75%]">
         {!isMine && info?.nickname && (
           <p className="text-xs text-gray-400 mb-1 ml-1">{info.nickname}</p>
@@ -47,8 +45,8 @@ export default function ChatBubble({ message, isMine, userInfo, partnerInfo }: P
           <div
             className={`w-fit max-w-full rounded-2xl px-4 py-2.5 text-sm leading-relaxed break-words ${
               isMine
-                ? 'bg-gradient-to-r from-rose-400 to-pink-500 text-white rounded-br-md shadow-sm'
-                : 'bg-white text-gray-800 rounded-bl-md shadow-sm border border-gray-100'
+                ? 'bg-amber-500 text-white rounded-br-md shadow-sm'
+                : 'bg-white text-gray-800 rounded-bl-md shadow-sm border border-gray-200'
             }`}
           >
             {message.content}
@@ -64,7 +62,7 @@ export default function ChatBubble({ message, isMine, userInfo, partnerInfo }: P
         )}
         <div className={`flex items-center gap-1 mt-0.5 ${isMine ? 'justify-end' : 'justify-start'}`}>
           <p className="text-xs text-gray-400">{formatDate(message.created_at)}</p>
-          {isMine && message.read && <span className="text-xs text-rose-400">已读</span>}
+          {isMine && message.read && <span className="text-xs text-amber-500">已读</span>}
         </div>
       </div>
     </div>

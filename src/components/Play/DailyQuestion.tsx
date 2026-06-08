@@ -71,8 +71,8 @@ export default function DailyQuestion() {
   if (loading) return null;
 
   return (
-    <div className="bg-white rounded-2xl p-4 space-y-3 shadow-sm border border-rose-100">
-      <h3 className="text-sm font-semibold text-rose-500">📋 每日一问</h3>
+    <div className="bg-white rounded-xl p-4 space-y-3 border border-gray-200">
+      <h3 className="text-sm font-semibold text-gray-500">每日一问</h3>
       <p className="text-gray-800 font-medium">{question}</p>
 
       {!submitted ? (
@@ -81,26 +81,26 @@ export default function DailyQuestion() {
             value={myAnswer}
             onChange={(e) => setMyAnswer(e.target.value)}
             placeholder="写下你的回答..."
-            className="w-full bg-rose-50 border border-rose-200 rounded-xl px-4 py-3 outline-none focus:border-rose-400 focus:bg-white transition-colors text-sm resize-none"
+            className="w-full bg-white border border-gray-200 rounded-lg px-4 py-3 outline-none focus:border-amber-500 transition-colors text-sm resize-none"
             rows={3}
           />
           <button
             onClick={submitAnswer}
             disabled={!myAnswer.trim()}
-            className="mt-2 bg-gradient-to-r from-rose-400 to-pink-500 text-white px-4 py-2 rounded-xl text-sm font-medium disabled:opacity-40 shadow-lg shadow-rose-500/20"
+            className="mt-2 bg-amber-500 text-white px-4 py-2 rounded-lg text-sm font-medium disabled:opacity-40 active:scale-[0.98] transition-all"
           >
             提交回答
           </button>
         </div>
       ) : (
         <div className="space-y-2">
-          <div className="bg-rose-50 rounded-xl px-4 py-2.5">
-            <p className="text-xs text-rose-500 mb-0.5">你的回答</p>
+          <div className="bg-gray-50 rounded-lg px-4 py-2.5">
+            <p className="text-xs text-gray-500 mb-0.5">你的回答</p>
             <p className="text-sm text-gray-700">{myAnswer}</p>
           </div>
           {partnerAnswer ? (
-            <div className="bg-pink-50 rounded-xl px-4 py-2.5">
-              <p className="text-xs text-pink-400 mb-0.5">TA的回答</p>
+            <div className="bg-amber-50 rounded-lg px-4 py-2.5">
+              <p className="text-xs text-amber-600 mb-0.5">TA的回答</p>
               <p className="text-sm text-gray-700">{partnerAnswer}</p>
             </div>
           ) : (

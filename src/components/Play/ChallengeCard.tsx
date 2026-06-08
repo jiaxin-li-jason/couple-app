@@ -38,39 +38,39 @@ function ChallengeCard({ challenge, userId, onUpdate }: Props) {
       checkin_date: today,
     });
     setCheckins([...checkins, today]);
-    toast.success('打卡成功！✅');
+    toast.success('打卡成功！');
 
     if (checkins.length + 1 >= challenge.total_days) {
       await supabase.from('challenges').update({ active: false }).eq('id', challenge.id);
-      toast('🎉 挑战完成！', { icon: '🎉' });
+      toast('挑战完成！', { icon: '🎉' });
       onUpdate();
     }
   };
 
   return (
-    <div className="bg-white border border-rose-100 rounded-2xl p-4 space-y-2 shadow-sm">
+    <div className="bg-white border border-gray-200 rounded-xl p-4 space-y-2">
       <div className="flex justify-between items-start">
         <div>
           <h4 className="font-semibold text-gray-800">{challenge.title}</h4>
           {challenge.description && <p className="text-xs text-gray-400 mt-0.5">{challenge.description}</p>}
         </div>
-        <span className={`text-xs px-2 py-0.5 rounded-full ${challenge.active ? 'bg-rose-100 text-rose-600' : 'bg-gray-100 text-gray-400'}`}>
+        <span className={`text-xs px-2 py-0.5 rounded-full ${challenge.active ? 'bg-amber-100 text-amber-700' : 'bg-gray-100 text-gray-400'}`}>
           {challenge.active ? '进行中' : '已完成'}
         </span>
       </div>
       {challenge.active && (
         <div>
-          <div className="w-full bg-rose-100 rounded-full h-2 mb-1">
-            <div className="bg-gradient-to-r from-rose-400 to-pink-500 h-2 rounded-full transition-all" style={{ width: `${progress}%` }} />
+          <div className="w-full bg-gray-100 rounded-full h-2 mb-1">
+            <div className="bg-amber-400 h-2 rounded-full transition-all" style={{ width: `${progress}%` }} />
           </div>
           <div className="flex justify-between items-center">
             <span className="text-xs text-gray-400">{checkins.length}/{challenge.total_days} 天</span>
             {!checkedToday && (
-              <button onClick={checkin} className="bg-gradient-to-r from-rose-400 to-pink-500 text-white px-3 py-1 rounded-full text-xs font-medium active:scale-95 transition-transform shadow-lg shadow-rose-500/20">
+              <button onClick={checkin} className="bg-amber-500 text-white px-3 py-1 rounded-full text-xs font-medium active:scale-95 transition-transform">
                 今日打卡
               </button>
             )}
-            {checkedToday && <span className="text-xs text-rose-500">今日已完成 ✅</span>}
+            {checkedToday && <span className="text-xs text-green-600">今日已完成</span>}
           </div>
         </div>
       )}

@@ -50,7 +50,7 @@ export default function QuizAnswer() {
 
     await supabase.from('quiz_questions').update({ answered: true }).eq('id', q.id);
 
-    toast(correct ? '答对了！+10分 🎉' : `答错了~正确答案是：${q.options[q.correct_index]}`);
+    toast(correct ? '答对了！+10分' : `答错了~正确答案是：${q.options[q.correct_index]}`);
     fetchQuestions();
   };
 
@@ -58,15 +58,15 @@ export default function QuizAnswer() {
 
   return (
     <div className="space-y-3">
-      <h3 className="text-sm font-semibold text-rose-500">💡 TA给你的题</h3>
+      <h3 className="text-sm font-semibold text-gray-500">TA给你的题</h3>
       {questions.map((q) => (
-        <div key={q.id} className="bg-white border border-rose-100 rounded-2xl p-4 space-y-3 shadow-sm">
+        <div key={q.id} className="bg-white border border-gray-200 rounded-xl p-4 space-y-3">
           <p className="text-gray-800 font-medium">{q.question}</p>
           {q.options.map((opt, i) => (
             <button
               key={i}
               onClick={() => answer(q, i)}
-              className="w-full text-left bg-rose-50 rounded-xl px-4 py-2.5 text-sm text-gray-700 active:bg-rose-100 transition-colors"
+              className="w-full text-left bg-gray-50 rounded-lg px-4 py-2.5 text-sm text-gray-700 active:bg-gray-100 transition-colors border border-gray-100"
             >
               {['A', 'B', 'C', 'D'][i]}. {opt}
             </button>

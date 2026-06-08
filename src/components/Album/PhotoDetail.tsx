@@ -88,9 +88,9 @@ export default function PhotoDetail({ photo, groupPhotos, currentIndex, onNaviga
   const hasNext = currentIndex < groupPhotos.length - 1;
 
   return (
-    <div className="min-h-screen bg-rose-50">
-      <div className="sticky top-0 bg-white/90 backdrop-blur flex items-center px-4 py-3 border-b border-rose-100 z-10">
-        <button onClick={() => router.back()} className="text-rose-400 mr-4 font-medium">← 返回</button>
+    <div className="min-h-screen bg-[#FAFAF8]">
+      <div className="sticky top-0 bg-white border-b border-gray-200 flex items-center px-4 py-3 z-10">
+        <button onClick={() => router.back()} className="text-gray-500 mr-4 font-medium text-sm hover:text-gray-700 transition-colors">← 返回</button>
         <span className="text-sm font-medium text-gray-500">
           {formatDate(photo.date || photo.created_at)}
           {groupPhotos.length > 1 && (
@@ -101,16 +101,14 @@ export default function PhotoDetail({ photo, groupPhotos, currentIndex, onNaviga
         </span>
       </div>
 
-      {/* 图片区域 — 支持左右滑动 */}
       <div
         ref={containerRef}
-        className="bg-white relative select-none"
+        className="bg-black relative select-none"
         onTouchStart={handleTouchStart}
         onTouchEnd={handleTouchEnd}
       >
         <img src={photo.image_url} alt={photo.caption} className="w-full aspect-square object-cover" />
 
-        {/* 左右导航箭头（桌面/hover） */}
         {hasPrev && (
           <button
             onClick={() => onNavigate(currentIndex - 1)}
@@ -128,7 +126,6 @@ export default function PhotoDetail({ photo, groupPhotos, currentIndex, onNaviga
           </button>
         )}
 
-        {/* 进度点 */}
         {groupPhotos.length > 1 && (
           <div className="absolute bottom-3 left-1/2 -translate-x-1/2 flex gap-1.5">
             {groupPhotos.map((_, i) => (
@@ -147,13 +144,12 @@ export default function PhotoDetail({ photo, groupPhotos, currentIndex, onNaviga
         {photo.caption && <p className="text-gray-700 font-medium">{photo.caption}</p>}
 
         <div className="flex items-center gap-4">
-          <button onClick={toggleLike} className={`text-lg ${liked ? 'text-rose-500' : 'text-gray-400'}`}>
+          <button onClick={toggleLike} className={`text-lg ${liked ? 'text-red-500' : 'text-gray-400'}`}>
             {liked ? '❤️' : '🤍'} {likeCount}
           </button>
           <span className="text-gray-400">💬 {comments.length}</span>
         </div>
 
-        {/* 删除按钮 */}
         <button
           onClick={async () => {
             if (window.confirm('确定要删除这张照片吗？')) {
@@ -163,17 +159,17 @@ export default function PhotoDetail({ photo, groupPhotos, currentIndex, onNaviga
               router.back();
             }
           }}
-          className="w-full py-2.5 text-sm text-red-400 border border-red-200 rounded-xl hover:bg-red-50 transition-colors"
+          className="w-full py-2.5 text-sm text-red-400 border border-red-200 rounded-lg hover:bg-red-50 transition-colors"
         >
-          🗑️ 删除照片
+          删除照片
         </button>
 
         {comments.length > 0 && (
           <div className="space-y-3 pt-2">
             {comments.map((c) => (
-              <div key={c.id} className="bg-white rounded-xl px-4 py-2.5 shadow-sm border border-rose-100">
+              <div key={c.id} className="bg-white rounded-lg px-4 py-2.5 border border-gray-100">
                 <p className="text-sm text-gray-700">{c.text}</p>
-                <p className="text-xs text-rose-300 mt-1">{formatDate(c.created_at)}</p>
+                <p className="text-xs text-gray-400 mt-1">{formatDate(c.created_at)}</p>
               </div>
             ))}
           </div>
@@ -184,9 +180,9 @@ export default function PhotoDetail({ photo, groupPhotos, currentIndex, onNaviga
             value={commentText}
             onChange={(e) => setCommentText(e.target.value)}
             placeholder="写评论..."
-            className="flex-1 bg-white border border-rose-200 rounded-xl px-4 py-2.5 outline-none focus:border-rose-400 text-sm"
+            className="flex-1 bg-white border border-gray-200 rounded-lg px-4 py-2.5 text-sm outline-none focus:border-amber-500 transition-colors"
           />
-          <button onClick={addComment} className="bg-gradient-to-r from-rose-400 to-pink-500 text-white px-4 py-2.5 rounded-xl text-sm font-medium shadow-lg shadow-rose-500/20">
+          <button onClick={addComment} className="bg-amber-500 text-white px-4 py-2.5 rounded-lg text-sm font-medium active:scale-[0.98] transition-all">
             发送
           </button>
         </div>
