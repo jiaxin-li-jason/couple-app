@@ -1,22 +1,29 @@
 'use client';
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { useAuth } from '@/hooks/useAuth';
 import { supabase } from '@/lib/supabase';
 import { getCurrentUser } from '@/lib/auth';
 import toast from 'react-hot-toast';
+import imageCompression from 'browser-image-compression';
 
 export default function SettingsPage() {
   const { user, paired, generateCode, pair, loading, signOut } = useAuth();
   const [nickname, setNickname] = useState('');
+  const [avatarUrl, setAvatarUrl] = useState<string | null>(null);
+  const [uploading, setUploading] = useState(false);
   const [pairCode, setPairCode] = useState('');
   const [inputCode, setInputCode] = useState('');
   const [copied, setCopied] = useState(false);
+  const fileInputRef = useRef<HTMLInputElement>(null);
 
   useEffect(() => {
     getCurrentUser().then((u) => {
       if (u) {
-        supabase.from('users').select('nickname').eq('id', u.id).single().then(({ data }) => {
-          if (data) setNickname(data.nickname);
+        supabase.from('users').select('nickname, avatar_url').eq('id', u.id).single().then(({ data }) => {
+          if (data) {
+            setNickname(data.nickname);
+            setAvatarUrl(data.avatar_url);
+          }
         });
       }
     });
@@ -41,6 +48,31 @@ export default function SettingsPage() {
     else toast.error('配对码无效');
   };
 
+  const handleAvatarUpload = async (file: File) => {
+    setUploading(true);
+    try {
+      const compressed = await imageCompression(file, {
+        maxSizeMB: 0.3,
+        maxWidthOrHeight: 400,
+        useWebWorker: true,
+      });
+      const user = await getCurrentUser();
+      if (!user) return;
+      const ext = file.name.split('.').pop() || 'jpg';
+      const fileName = `avatars/${user.id}.${ext}`;
+      await supabase.storage.from('avatars').upload(fileName, compressed, { upsert: true });
+      const { data: urlData } = supabase.storage.from('avatars').getPublicUrl(fileName);
+      const url = urlData.publicUrl;
+      await supabase.from('users').update({ avatar_url: url }).eq('id', user.id);
+      setAvatarUrl(url);
+      toast.success('头像已更新');
+    } catch {
+      toast.error('头像上传失败');
+    } finally {
+      setUploading(false);
+    }
+  };
+
   const handleSignOut = async () => {
     await signOut();
     toast.success('已退出登录');
@@ -51,6 +83,32 @@ export default function SettingsPage() {
   return (
     <div className="pt-6 space-y-6">
       <h1 className="text-lg font-bold text-rose-600">设置</h1>
+
+      {/* 头像 */}
+      <div className="flex flex-col items-center">
+        <input
+          ref={fileInputRef}
+          type="file"
+          accept="image/*"
+          className="hidden"
+          onChange={(e) => {
+            const file = e.target.files?.[0];
+            if (file) handleAvatarUpload(file);
+          }}
+        />
+        <button
+          onClick={() => fileInputRef.current?.click()}
+          disabled={uploading}
+          className="w-24 h-24 rounded-full overflow-hidden bg-gradient-to-br from-rose-300 to-pink-400 flex items-center justify-center text-white text-3xl font-bold shadow-lg shadow-rose-500/20 hover:opacity-80 transition-opacity disabled:opacity-50"
+        >
+          {avatarUrl ? (
+            <img src={avatarUrl} alt="avatar" className="w-full h-full object-cover" />
+          ) : (
+            <span>{nickname.charAt(0) || '?'}</span>
+          )}
+        </button>
+        <p className="text-xs text-rose-400 mt-2">{uploading ? '上传中...' : '点击更换头像'}</p>
+      </div>
 
       {/* 当前账号 */}
       <div className="bg-white rounded-2xl p-4 space-y-3 shadow-sm border border-rose-100">

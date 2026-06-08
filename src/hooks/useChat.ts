@@ -8,7 +8,7 @@ import imageCompression from 'browser-image-compression';
 export interface Message {
   id: string;
   sender_id: string;
-  type: 'text' | 'image' | 'voice';
+  type: 'text' | 'image';
   content: string;
   read: boolean;
   created_at: string;
@@ -27,11 +27,13 @@ export function useChat() {
   const [partnerInfo, setPartnerInfo] = useState<UserInfo | null>(null);
   const [loading, setLoading] = useState(true);
   const bottomRef = useRef<HTMLDivElement>(null);
+  const userIdRef = useRef('');
 
   useEffect(() => {
     getCurrentUser().then(async (u) => {
       if (u) {
         setUserId(u.id);
+        userIdRef.current = u.id;
 
         const { data: myInfo } = await supabase
           .from('users')
@@ -64,14 +66,12 @@ export function useChat() {
       }, (payload) => {
         setMessages((prev) => [...prev, payload.new as Message]);
         const msg = payload.new as Message;
-        if (msg.sender_id !== userId) {
+        if (msg.sender_id !== userIdRef.current) {
           supabase.from('messages').update({ read: true }).eq('id', msg.id).then(() => {});
           if (msg.type === 'text') {
             sendLocalNotification('新消息', msg.content);
           } else if (msg.type === 'image') {
             sendLocalNotification('新消息', '[图片]');
-          } else if (msg.type === 'voice') {
-            sendLocalNotification('新消息', '[语音]');
           }
         }
       })
@@ -80,7 +80,7 @@ export function useChat() {
     return () => {
       supabase.removeChannel(channel);
     };
-  }, [userId]);
+  }, []); // 只订阅一次，回调中用 userIdRef 避免闭包陈旧
 
   const fetchMessages = async () => {
     const { data } = await supabase
