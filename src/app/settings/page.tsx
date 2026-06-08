@@ -6,7 +6,7 @@ import { getCurrentUser } from '@/lib/auth';
 import toast from 'react-hot-toast';
 
 export default function SettingsPage() {
-  const { paired, generateCode, pair, loading } = useAuth();
+  const { user, paired, generateCode, pair, loading, signOut } = useAuth();
   const [nickname, setNickname] = useState('');
   const [pairCode, setPairCode] = useState('');
   const [inputCode, setInputCode] = useState('');
@@ -41,11 +41,28 @@ export default function SettingsPage() {
     else toast.error('配对码无效');
   };
 
+  const handleSignOut = async () => {
+    await signOut();
+    toast.success('已退出登录');
+  };
+
   if (loading) return <div className="pt-6 py-20 text-center text-rose-300">加载中...</div>;
 
   return (
     <div className="pt-6 space-y-6">
       <h1 className="text-lg font-bold text-rose-600">设置</h1>
+
+      {/* 当前账号 */}
+      <div className="bg-white rounded-2xl p-4 space-y-3 shadow-sm border border-rose-100">
+        <label className="text-sm font-medium text-rose-600">当前账号</label>
+        <p className="text-sm text-rose-400">{user?.email || '未知'}</p>
+        <button
+          onClick={handleSignOut}
+          className="w-full bg-gradient-to-r from-rose-400 to-pink-500 text-white py-2.5 rounded-xl text-sm shadow-lg shadow-rose-500/20"
+        >
+          退出登录
+        </button>
+      </div>
 
       {/* 昵称 */}
       <div className="bg-white rounded-2xl p-4 space-y-3 shadow-sm border border-rose-100">

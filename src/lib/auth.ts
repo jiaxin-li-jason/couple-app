@@ -1,56 +1,61 @@
 import { supabase } from './supabase';
-import { getDeviceId, generatePairCode } from './utils';
 
-/** 当前用户缓存 */
-let _currentUser: { id: string; partner_id: string | null } | null = null;
+/** 邮箱登录（发送 Magic Link） */
+export async function signInWithEmail(email: string) {
+  const { error } = await supabase.auth.signInWithOtp({ email });
+  if (error) throw error;
+}
 
-/** 初始化或获取当前用户 */
-export async function initUser(nickname?: string): Promise<{ id: string }> {
-  const deviceId = getDeviceId();
+/** 登出 */
+export async function signOut() {
+  const { error } = await supabase.auth.signOut();
+  if (error) throw error;
+}
 
-  // 查找已有用户
-  const { data: existing } = await supabase
+/** 获取当前用户信息（含 partner_id） */
+export async function getCurrentUser() {
+  const { data: { user } } = await supabase.auth.getUser();
+  if (!user) return null;
+
+  const { data } = await supabase
     .from('users')
     .select('id, partner_id')
-    .eq('device_id', deviceId)
+    .eq('id', user.id)
     .single();
 
-  if (existing) {
-    _currentUser = existing;
-    return existing;
-  }
+  return data;
+}
 
-  // 创建新用户
+/** 初始化用户档案（首次邮箱登录时在 users 表创建记录） */
+export async function initUserProfile(nickname?: string) {
+  const { data: { user } } = await supabase.auth.getUser();
+  if (!user) throw new Error('未登录');
+
+  const { data: existing } = await supabase
+    .from('users')
+    .select('id')
+    .eq('id', user.id)
+    .single();
+
+  if (existing) return existing;
+
+  const username = nickname || user.email?.split('@')[0] || '另一半';
   const { data: created, error } = await supabase
     .from('users')
-    .insert({ device_id: deviceId, nickname: nickname || '另一半' })
+    .insert({ id: user.id, nickname: username })
     .select('id, partner_id')
     .single();
 
   if (error) throw error;
-  _currentUser = created;
   return created;
-}
-
-/** 获取当前用户 */
-export async function getCurrentUser() {
-  if (_currentUser) return _currentUser;
-  const deviceId = getDeviceId();
-  const { data } = await supabase
-    .from('users')
-    .select('id, partner_id')
-    .eq('device_id', deviceId)
-    .single();
-  _currentUser = data;
-  return data;
 }
 
 /** 生成配对码 */
 export async function createPairCode(): Promise<string> {
   const user = await getCurrentUser();
-  if (!user) throw new Error('用户未初始化');
+  if (!user) throw new Error('用户未登录');
 
-  const code = generatePairCode();
+  const code = Math.floor(100000 + Math.random() * 900000).toString();
   const { error } = await supabase
     .from('users')
     .update({ pair_code: code })
@@ -63,10 +68,9 @@ export async function createPairCode(): Promise<string> {
 /** 通过配对码绑定伴侣 */
 export async function joinWithCode(code: string): Promise<boolean> {
   const user = await getCurrentUser();
-  if (!user) throw new Error('用户未初始化');
+  if (!user) throw new Error('用户未登录');
   if (user.partner_id) throw new Error('已配对');
 
-  // 查找配对码对应的用户
   const { data: partner } = await supabase
     .from('users')
     .select('id')
@@ -75,7 +79,6 @@ export async function joinWithCode(code: string): Promise<boolean> {
 
   if (!partner) return false;
 
-  // 互相绑定
   const { error: e1 } = await supabase
     .from('users')
     .update({ partner_id: partner.id })
@@ -87,7 +90,5 @@ export async function joinWithCode(code: string): Promise<boolean> {
     .eq('id', partner.id);
 
   if (e1 || e2) throw new Error('绑定失败');
-
-  _currentUser = { ...user, partner_id: partner.id };
   return true;
 }

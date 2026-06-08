@@ -1,11 +1,11 @@
 'use client';
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import { useAuth } from '@/hooks/useAuth';
 
 function FloatingHearts() {
   const [hearts, setHearts] = useState<{ id: number; left: string; delay: string; size: string }[]>([]);
 
-  useEffect(() => {
+  useState(() => {
     const interval = setInterval(() => {
       setHearts((prev) => [
         ...prev.slice(-5),
@@ -18,7 +18,7 @@ function FloatingHearts() {
       ]);
     }, 800);
     return () => clearInterval(interval);
-  }, []);
+  });
 
   return (
     <>
@@ -41,10 +41,26 @@ function FloatingHearts() {
 }
 
 export default function PairingGuard({ children }: { children: React.ReactNode }) {
-  const { loading, paired, generateCode, pair } = useAuth();
+  const { loading, user, userProfile, paired, signIn, generateCode, pair } = useAuth();
+  const [email, setEmail] = useState('');
+  const [emailSent, setEmailSent] = useState(false);
+  const [sending, setSending] = useState(false);
   const [code, setCode] = useState('');
   const [myCode, setMyCode] = useState('');
   const [copied, setCopied] = useState(false);
+
+  const handleSendLink = async () => {
+    if (!email.trim()) return;
+    setSending(true);
+    try {
+      await signIn(email.trim());
+      setEmailSent(true);
+    } catch {
+      // ignore
+    } finally {
+      setSending(false);
+    }
+  };
 
   if (loading) {
     return (
@@ -54,6 +70,53 @@ export default function PairingGuard({ children }: { children: React.ReactNode }
     );
   }
 
+  // 未登录 → 邮箱登录界面
+  if (!user) {
+    return (
+      <div className="min-h-screen flex flex-col items-center justify-center bg-gradient-to-br from-rose-400 via-pink-500 to-rose-600 p-6 relative overflow-hidden">
+        <FloatingHearts />
+        <div className="relative z-10 text-center mb-8 animate-fade-in-up">
+          <h1 className="text-3xl font-bold text-white mb-2">我们的空间 💑</h1>
+          <p className="text-rose-100 text-sm">输入邮箱，接收登录链接</p>
+        </div>
+
+        {emailSent ? (
+          <div className="w-full max-w-sm relative z-10 text-center animate-fade-in-up">
+            <div className="glass rounded-3xl p-8">
+              <div className="text-5xl mb-4">📧</div>
+              <p className="text-white font-semibold mb-2">登录链接已发送</p>
+              <p className="text-rose-200 text-sm">
+                请检查你的邮箱 <span className="text-white font-medium">{email}</span>
+              </p>
+              <p className="text-rose-200 text-xs mt-4">链接有效期为 10 分钟</p>
+            </div>
+          </div>
+        ) : (
+          <div className="w-full max-w-sm relative z-10">
+            <div className="glass rounded-3xl p-6">
+              <input
+                type="email"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                onKeyDown={(e) => e.key === 'Enter' && handleSendLink()}
+                placeholder="输入你的邮箱"
+                className="w-full bg-white/20 border border-white/30 rounded-xl px-4 py-3 text-center text-white outline-none placeholder-rose-200 focus:border-white/50 backdrop-blur"
+              />
+              <button
+                onClick={handleSendLink}
+                disabled={!email.trim() || sending}
+                className="w-full mt-3 bg-gradient-to-r from-rose-400 to-pink-500 text-white py-3 rounded-xl font-medium disabled:opacity-40 active:scale-95 transition-transform shadow-lg shadow-rose-500/30"
+              >
+                {sending ? '发送中...' : '发送登录链接'}
+              </button>
+            </div>
+          </div>
+        )}
+      </div>
+    );
+  }
+
+  // 已登录但未配对 → 配对界面
   if (!paired) {
     return (
       <div className="min-h-screen flex flex-col items-center justify-center bg-gradient-to-br from-rose-400 via-pink-500 to-rose-600 p-6 relative overflow-hidden">
@@ -65,7 +128,6 @@ export default function PairingGuard({ children }: { children: React.ReactNode }
         </div>
 
         <div className="w-full max-w-sm space-y-4 relative z-10">
-          {/* 创建配对码 */}
           <div className="glass rounded-3xl p-6">
             <h2 className="text-sm font-semibold text-rose-700 mb-3">我还没配对</h2>
             <button
@@ -95,7 +157,6 @@ export default function PairingGuard({ children }: { children: React.ReactNode }
             )}
           </div>
 
-          {/* 输入配对码 */}
           <div className="glass rounded-3xl p-6">
             <h2 className="text-sm font-semibold text-rose-700 mb-3">我有配对码</h2>
             <input

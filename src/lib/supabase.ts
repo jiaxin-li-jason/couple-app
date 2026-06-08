@@ -4,7 +4,7 @@ const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL!;
 const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!;
 
 export const supabase = createClient(supabaseUrl, supabaseAnonKey, {
-  auth: { persistSession: false },
+  auth: { persistSession: true, autoRefreshToken: true, detectSessionInUrl: true },
 });
 
 export type Database = {
@@ -14,7 +14,7 @@ export type Database = {
     avatar_url: string | null;
     partner_id: string | null;
     pair_code: string | null;
-    device_id: string;
+    device_id: string | null;
     created_at: string;
   };
   anniversaries: {
