@@ -2,7 +2,10 @@ import { supabase } from './supabase';
 
 /** 邮箱登录（发送 Magic Link） */
 export async function signInWithEmail(email: string) {
-  const { error } = await supabase.auth.signInWithOtp({ email });
+  const { error } = await supabase.auth.signInWithOtp({
+    email,
+    options: { emailRedirectTo: 'https://couple-app-rose.vercel.app' },
+  });
   if (error) throw error;
 }
 
