@@ -2,21 +2,34 @@
 import { useRef, useState } from 'react';
 
 interface Props {
-  onUpload: (file: File, caption: string, date: string) => Promise<void>;
+  onUpload: (files: File[], caption: string, date: string) => Promise<void>;
 }
 
 export default function PhotoUpload({ onUpload }: Props) {
   const [show, setShow] = useState(false);
   const [caption, setCaption] = useState('');
   const [date, setDate] = useState(new Date().toISOString().split('T')[0]);
-  const [preview, setPreview] = useState<string | null>(null);
+  const [files, setFiles] = useState<File[]>([]);
+  const [previews, setPreviews] = useState<string[]>([]);
   const [uploading, setUploading] = useState(false);
   const albumRef = useRef<HTMLInputElement>(null);
   const cameraRef = useRef<HTMLInputElement>(null);
 
   const handleFile = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0];
-    if (file) setPreview(URL.createObjectURL(file));
+    const selected = Array.from(e.target.files || []);
+    if (!selected.length) return;
+    setFiles((prev) => [...prev, ...selected]);
+    setPreviews((prev) => [...prev, ...selected.map((f) => URL.createObjectURL(f))]);
+    // 重置 input 值，允许重复选择同一文件
+    e.target.value = '';
+  };
+
+  const removeFile = (idx: number) => {
+    setFiles((prev) => prev.filter((_, i) => i !== idx));
+    setPreviews((prev) => {
+      URL.revokeObjectURL(prev[idx]);
+      return prev.filter((_, i) => i !== idx);
+    });
   };
 
   if (!show) {
@@ -31,10 +44,25 @@ export default function PhotoUpload({ onUpload }: Props) {
   }
 
   return (
-    <div className="bg-white rounded-2xl p-4 space-y-3 shadow-lg border border-rose-100 relative z-20">
-      <input ref={albumRef} type="file" accept="image/*" onChange={handleFile} className="hidden" />
-      <input ref={cameraRef} type="file" accept="image/*" capture="environment" onChange={handleFile} className="hidden" />
-      {!preview ? (
+    <div className="bg-white rounded-2xl p-4 space-y-3 shadow-lg border border-rose-100 relative z-20 max-h-[80vh] overflow-y-auto">
+      <input
+        ref={albumRef}
+        type="file"
+        accept="image/*"
+        multiple
+        onChange={handleFile}
+        className="hidden"
+      />
+      <input
+        ref={cameraRef}
+        type="file"
+        accept="image/*"
+        capture="environment"
+        onChange={handleFile}
+        className="hidden"
+      />
+
+      {previews.length === 0 ? (
         <div className="flex gap-2">
           <button onClick={() => albumRef.current?.click()} className="flex-1 bg-rose-50 border-2 border-dashed border-rose-200 rounded-xl py-8 text-rose-400 hover:bg-rose-100 transition-colors">
             📁 从相册选择
@@ -44,8 +72,27 @@ export default function PhotoUpload({ onUpload }: Props) {
           </button>
         </div>
       ) : (
-        <img src={preview} alt="预览" className="w-full rounded-xl max-h-64 object-cover shadow-sm" />
+        <div className="grid grid-cols-3 gap-2">
+          {previews.map((src, i) => (
+            <div key={i} className="relative group">
+              <img src={src} alt={`预览 ${i + 1}`} className="w-full aspect-square object-cover rounded-xl shadow-sm" />
+              <button
+                onClick={() => removeFile(i)}
+                className="absolute -top-1.5 -right-1.5 w-5 h-5 bg-black/50 text-white rounded-full text-xs flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity"
+              >
+                ✕
+              </button>
+            </div>
+          ))}
+          <button
+            onClick={() => albumRef.current?.click()}
+            className="aspect-square flex items-center justify-center bg-rose-50 border-2 border-dashed border-rose-200 rounded-xl text-rose-400 hover:bg-rose-100 transition-colors text-2xl"
+          >
+            +
+          </button>
+        </div>
       )}
+
       <input
         type="date"
         value={date}
@@ -55,25 +102,38 @@ export default function PhotoUpload({ onUpload }: Props) {
       <input
         value={caption}
         onChange={(e) => setCaption(e.target.value)}
-        placeholder="写一句话..."
+        placeholder="写一句话（所有照片共用）..."
         className="w-full bg-rose-50 border border-rose-200 rounded-xl px-4 py-3 outline-none focus:border-rose-400 focus:bg-white transition-colors"
       />
+
       <div className="flex gap-2">
         <button
           onClick={async () => {
-            const file = albumRef.current?.files?.[0] || cameraRef.current?.files?.[0];
-            if (!file) return;
+            if (files.length === 0) return;
             setUploading(true);
-            await onUpload(file, caption, date);
-            setUploading(false);
-            setCaption(''); setPreview(null); setDate(new Date().toISOString().split('T')[0]); setShow(false);
+            try {
+              await onUpload(files, caption, date);
+            } finally {
+              setUploading(false);
+              setFiles([]);
+              setPreviews([]);
+              setCaption('');
+              setDate(new Date().toISOString().split('T')[0]);
+              setShow(false);
+            }
           }}
-          disabled={(!albumRef.current?.files?.[0] && !cameraRef.current?.files?.[0]) || uploading}
+          disabled={files.length === 0 || uploading}
           className="flex-1 bg-gradient-to-r from-rose-400 to-pink-500 text-white py-2.5 rounded-xl font-medium disabled:opacity-40 shadow-lg shadow-rose-500/20"
         >
-          {uploading ? '上传中...' : '上传'}
+          {uploading ? '上传中...' : `上传 ${files.length} 张`}
         </button>
-        <button onClick={() => setShow(false)} className="flex-1 bg-gray-100 text-gray-400 py-2.5 rounded-xl">取消</button>
+        <button onClick={() => {
+          setFiles([]);
+          setPreviews([]);
+          setShow(false);
+        }} className="flex-1 bg-gray-100 text-gray-400 py-2.5 rounded-xl">
+          取消
+        </button>
       </div>
     </div>
   );

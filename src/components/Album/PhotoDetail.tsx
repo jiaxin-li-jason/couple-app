@@ -1,5 +1,5 @@
 'use client';
-import { useState, useEffect, useCallback } from 'react';
+import { useState, useEffect, useCallback, useRef } from 'react';
 import { useRouter } from 'next/navigation';
 import { supabase } from '@/lib/supabase';
 import { getCurrentUser } from '@/lib/auth';
@@ -9,6 +9,9 @@ import toast from 'react-hot-toast';
 
 interface Props {
   photo: Photo;
+  groupPhotos: Photo[];
+  currentIndex: number;
+  onNavigate: (index: number) => void;
 }
 
 interface Comment {
@@ -18,13 +21,15 @@ interface Comment {
   created_at: string;
 }
 
-export default function PhotoDetail({ photo }: Props) {
+export default function PhotoDetail({ photo, groupPhotos, currentIndex, onNavigate }: Props) {
   const router = useRouter();
   const [comments, setComments] = useState<Comment[]>([]);
   const [liked, setLiked] = useState(false);
   const [likeCount, setLikeCount] = useState(0);
   const [commentText, setCommentText] = useState('');
   const [userId, setUserId] = useState('');
+  const touchStart = useRef(0);
+  const containerRef = useRef<HTMLDivElement>(null);
 
   const fetchMeta = useCallback(async () => {
     const user = await getCurrentUser();
@@ -64,15 +69,78 @@ export default function PhotoDetail({ photo }: Props) {
     fetchMeta();
   };
 
+  const handleTouchStart = (e: React.TouchEvent) => {
+    touchStart.current = e.touches[0].clientX;
+  };
+
+  const handleTouchEnd = (e: React.TouchEvent) => {
+    const diff = touchStart.current - e.changedTouches[0].clientX;
+    if (Math.abs(diff) > 50) {
+      if (diff > 0 && currentIndex < groupPhotos.length - 1) {
+        onNavigate(currentIndex + 1);
+      } else if (diff < 0 && currentIndex > 0) {
+        onNavigate(currentIndex - 1);
+      }
+    }
+  };
+
+  const hasPrev = currentIndex > 0;
+  const hasNext = currentIndex < groupPhotos.length - 1;
+
   return (
     <div className="min-h-screen bg-rose-50">
       <div className="sticky top-0 bg-white/90 backdrop-blur flex items-center px-4 py-3 border-b border-rose-100 z-10">
         <button onClick={() => router.back()} className="text-rose-400 mr-4 font-medium">← 返回</button>
-        <span className="text-sm font-medium text-gray-500">{formatDate(photo.date || photo.created_at)}</span>
+        <span className="text-sm font-medium text-gray-500">
+          {formatDate(photo.date || photo.created_at)}
+          {groupPhotos.length > 1 && (
+            <span className="text-gray-400 ml-2">
+              {currentIndex + 1}/{groupPhotos.length}
+            </span>
+          )}
+        </span>
       </div>
 
-      <div className="bg-white">
+      {/* 图片区域 — 支持左右滑动 */}
+      <div
+        ref={containerRef}
+        className="bg-white relative select-none"
+        onTouchStart={handleTouchStart}
+        onTouchEnd={handleTouchEnd}
+      >
         <img src={photo.image_url} alt={photo.caption} className="w-full aspect-square object-cover" />
+
+        {/* 左右导航箭头（桌面/hover） */}
+        {hasPrev && (
+          <button
+            onClick={() => onNavigate(currentIndex - 1)}
+            className="absolute left-2 top-1/2 -translate-y-1/2 w-10 h-10 bg-white/80 rounded-full flex items-center justify-center text-gray-700 shadow-md hover:bg-white transition-colors opacity-0 md:opacity-100"
+          >
+            ‹
+          </button>
+        )}
+        {hasNext && (
+          <button
+            onClick={() => onNavigate(currentIndex + 1)}
+            className="absolute right-2 top-1/2 -translate-y-1/2 w-10 h-10 bg-white/80 rounded-full flex items-center justify-center text-gray-700 shadow-md hover:bg-white transition-colors opacity-0 md:opacity-100"
+          >
+            ›
+          </button>
+        )}
+
+        {/* 进度点 */}
+        {groupPhotos.length > 1 && (
+          <div className="absolute bottom-3 left-1/2 -translate-x-1/2 flex gap-1.5">
+            {groupPhotos.map((_, i) => (
+              <span
+                key={i}
+                className={`w-1.5 h-1.5 rounded-full transition-all ${
+                  i === currentIndex ? 'bg-white w-3' : 'bg-white/50'
+                }`}
+              />
+            ))}
+          </div>
+        )}
       </div>
 
       <div className="p-4 space-y-4">

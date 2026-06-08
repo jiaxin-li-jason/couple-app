@@ -30,41 +30,51 @@ export function usePhotos() {
 
   useEffect(() => { fetchPhotos(); }, [fetchPhotos]);
 
-  /** 上传照片（含压缩） */
-  const uploadPhoto = useCallback(async (file: File, caption: string, date: string) => {
+  /** 批量上传照片（含压缩） */
+  const uploadPhotos = useCallback(async (files: File[], caption: string, date: string) => {
     const user = await getCurrentUser();
     if (!user) throw new Error('未登录');
 
-    // 压缩图片（max 1200px, 0.7 quality）
-    const compressed = await imageCompression(file, {
-      maxSizeMB: 0.5,
-      maxWidthOrHeight: 1200,
-      useWebWorker: true,
-    });
+    let successCount = 0;
+    for (const file of files) {
+      try {
+        // 压缩图片（max 1200px, 0.7 quality）
+        const compressed = await imageCompression(file, {
+          maxSizeMB: 0.5,
+          maxWidthOrHeight: 1200,
+          useWebWorker: true,
+        });
 
-    // 上传到 Supabase Storage
-    const fileName = `${user.id}/${Date.now()}-${file.name}`;
-    const { error: uploadError } = await supabase.storage
-      .from('photos')
-      .upload(fileName, compressed);
+        // 上传到 Supabase Storage
+        const fileName = `${user.id}/${Date.now()}-${file.name}`;
+        const { error: uploadError } = await supabase.storage
+          .from('photos')
+          .upload(fileName, compressed);
 
-    if (uploadError) throw uploadError;
+        if (uploadError) throw uploadError;
 
-    // 获取公开 URL
-    const { data: urlData } = supabase.storage
-      .from('photos')
-      .getPublicUrl(fileName);
+        // 获取公开 URL
+        const { data: urlData } = supabase.storage
+          .from('photos')
+          .getPublicUrl(fileName);
 
-    // 写入数据库
-    const { error: dbError } = await supabase.from('photos').insert({
-      image_url: urlData.publicUrl,
-      caption,
-      uploaded_by: user.id,
-      date,
-      month_tag: getMonthTag(new Date(date)),
-    });
+        // 写入数据库
+        const { error: dbError } = await supabase.from('photos').insert({
+          image_url: urlData.publicUrl,
+          caption,
+          uploaded_by: user.id,
+          date,
+          month_tag: getMonthTag(new Date(date)),
+        });
 
-    if (dbError) throw dbError;
+        if (dbError) throw dbError;
+        successCount++;
+      } catch {
+        // 单张失败继续上传其余
+      }
+    }
+
+    if (successCount === 0) throw new Error('上传失败');
     await fetchPhotos();
   }, [fetchPhotos]);
 
@@ -74,5 +84,5 @@ export function usePhotos() {
     await fetchPhotos();
   }, [fetchPhotos]);
 
-  return { photos, loading, uploadPhoto, deletePhoto, refresh: fetchPhotos };
+  return { photos, loading, uploadPhotos, deletePhoto, refresh: fetchPhotos };
 }
