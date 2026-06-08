@@ -1,10 +1,44 @@
 'use client';
+import { useState, useEffect } from 'react';
 import DaysCounter from '@/components/Anniversary/DaysCounter';
 import CountdownList from '@/components/Anniversary/CountdownList';
 import AnniversaryForm from '@/components/Anniversary/AnniversaryForm';
 import SweetQuote from '@/components/Anniversary/SweetQuote';
 import { useAnniversaries } from '@/hooks/useAnniversaries';
 import toast from 'react-hot-toast';
+
+function Greeting() {
+  const [greeting, setGreeting] = useState('');
+  const [dateStr, setDateStr] = useState('');
+
+  useEffect(() => {
+    const now = new Date();
+    const hour = now.getHours();
+    if (hour < 6) setGreeting('夜深了 🌙');
+    else if (hour < 9) setGreeting('早安 ☀️');
+    else if (hour < 12) setGreeting('上午好 🌤');
+    else if (hour < 14) setGreeting('午好 🌤');
+    else if (hour < 18) setGreeting('下午好 ☀️');
+    else setGreeting('晚安 🌙');
+
+    setDateStr(
+      now.toLocaleDateString('zh-CN', {
+        month: 'long',
+        day: 'numeric',
+        weekday: 'long',
+      })
+    );
+  }, []);
+
+  if (!greeting) return null;
+
+  return (
+    <div className="text-center mb-6">
+      <p className="text-lg font-medium text-gray-700">{greeting}</p>
+      <p className="text-xs text-gray-400 mt-1">{dateStr}</p>
+    </div>
+  );
+}
 
 export default function HomePage() {
   const { anniversaries, loveDate, daysTogether, loading, addAnniversary, deleteAnniversary } = useAnniversaries();
@@ -14,12 +48,22 @@ export default function HomePage() {
   }
 
   return (
-    <div className="space-y-5 pt-6">
-      <div className="h-1 w-16 bg-gradient-to-r from-rose-400 to-rose-300 rounded-full" />
-      <div className="pb-1">
-        <h1 className="text-lg font-bold text-gray-900">纪念日</h1>
-        <p className="text-gray-500 text-xs mt-0.5">珍惜每一个特别的日子</p>
+    <div className="space-y-5 pt-8">
+      {/* 问候与日期 */}
+      <Greeting />
+
+      {/* Hero 区 */}
+      <div className="bg-amber-50/80 rounded-3xl px-6 py-8 text-center border border-amber-100/60">
+        <p className="text-xs text-amber-400/80 tracking-[0.2em] uppercase font-medium mb-2">
+          Every day with you
+        </p>
+        <p className="text-2xl font-bold text-amber-800/90 leading-snug">
+          珍惜每一个
+          <br />
+          特别的日子
+        </p>
       </div>
+
       <DaysCounter days={daysTogether} loveDate={loveDate} />
       <SweetQuote />
       <CountdownList
@@ -35,6 +79,8 @@ export default function HomePage() {
           toast.success('纪念日已添加！');
         }}
       />
+      {/* 底部留白，防止浮动按钮遮挡内容 */}
+      <div className="h-20" />
     </div>
   );
 }

@@ -25,8 +25,21 @@ export default function SweetQuote() {
   if (!quote) return null;
 
   return (
-    <div className="bg-rose-50/60 rounded-xl px-5 py-4 border border-rose-100 card">
-      <p className="text-rose-700 text-sm leading-relaxed">&ldquo;{quote}&rdquo;</p>
+    <div className="relative bg-rose-50/30 rounded-2xl px-7 py-6 border border-rose-100/60 overflow-hidden">
+      {/* 大引号装饰 */}
+      <span className="absolute -top-2 left-3 text-6xl leading-none font-serif text-rose-200/60 select-none">
+        &ldquo;
+      </span>
+
+      {/* 引用文字 */}
+      <p className="relative text-rose-700 text-base leading-relaxed italic tracking-wide pl-3">
+        {quote}
+      </p>
+
+      {/* 底部小字 */}
+      <p className="text-rose-300 text-[10px] tracking-widest uppercase text-right mt-3">
+        每日情话
+      </p>
     </div>
   );
 }
