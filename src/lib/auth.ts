@@ -95,6 +95,7 @@ export async function joinWithCode(code: string): Promise<boolean> {
     .single();
 
   if (!partner) return false;
+  if (partner.id === user.id) return false; // 不能和自己配对
 
   const { error: e1 } = await supabase
     .from('users')
