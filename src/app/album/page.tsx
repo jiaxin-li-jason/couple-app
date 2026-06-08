@@ -25,6 +25,7 @@ export default function AlbumPage() {
 
   return (
     <div className="space-y-4 pt-6">
+      <div className="h-1 w-16 bg-gradient-to-r from-amber-400 to-amber-300 rounded-full" />
       <div className="pb-1">
         <div className="flex items-center justify-between">
           <div>
@@ -46,11 +47,11 @@ export default function AlbumPage() {
           <p className="text-gray-400 text-sm">点击右下角的 + 按钮上传第一张照片</p>
         </div>
       ) : (
-        <div className="space-y-6 pb-4">
+        <div className="space-y-8 pb-4">
           {grouped.map(([dateKey, groupPhotos]) => (
             <div key={dateKey}>
-              <h2 className="text-sm font-semibold text-gray-700 px-1 mb-2 flex items-center gap-2">
-                <span className="w-0.5 h-3.5 bg-amber-400 rounded-full inline-block" />
+              <h2 className="text-base font-bold text-gray-700 px-1 mb-3 flex items-center gap-2">
+                <span className="w-1 h-4 bg-amber-400 rounded-full inline-block" />
                 {formatDate(dateKey)}
                 <span className="text-xs text-gray-400 font-normal">{groupPhotos.length} 张</span>
               </h2>
@@ -60,17 +61,17 @@ export default function AlbumPage() {
                   <Link
                     key={photo.id}
                     href={`/album/${photo.id}`}
-                    className="flex-shrink-0 w-72 snap-center"
+                    className="flex-shrink-0 w-80 snap-center"
                   >
-                    <div className="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden hover:shadow-md hover:-translate-y-0.5 transition-all duration-200">
+                    <div className="bg-white rounded-xl card border border-gray-100 overflow-hidden hover:shadow-md hover:-translate-y-0.5 transition-all duration-200">
                         <img
                           src={photo.image_url}
                           alt={photo.caption}
-                          className="w-full h-64 object-cover"
+                          className="w-full h-72 object-cover"
                           loading="lazy"
                         />
                       {photo.caption && (
-                        <div className="px-3 py-2">
+                        <div className="px-4 py-3">
                           <p className="text-sm text-gray-600 line-clamp-2">{photo.caption}</p>
                         </div>
                       )}

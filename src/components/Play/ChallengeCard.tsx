@@ -48,32 +48,35 @@ function ChallengeCard({ challenge, userId, onUpdate }: Props) {
   };
 
   return (
-    <div className="bg-white border border-gray-200 rounded-xl p-4 space-y-2">
-      <div className="flex justify-between items-start">
-        <div>
-          <h4 className="font-semibold text-gray-800">{challenge.title}</h4>
-          {challenge.description && <p className="text-xs text-gray-400 mt-0.5">{challenge.description}</p>}
+    <div className="bg-white rounded-2xl border border-gray-100 overflow-hidden card">
+      <div className="h-1 bg-gradient-to-r from-emerald-400 to-teal-300" />
+      <div className="p-5 space-y-3">
+        <div className="flex justify-between items-start">
+          <div>
+            <h4 className="font-semibold text-gray-800">{challenge.title}</h4>
+            {challenge.description && <p className="text-xs text-gray-400 mt-0.5">{challenge.description}</p>}
+          </div>
+          <span className={`text-xs px-2.5 py-1 rounded-full ${challenge.active ? 'bg-emerald-100 text-emerald-700' : 'bg-gray-100 text-gray-400'}`}>
+            {challenge.active ? '进行中' : '已完成'}
+          </span>
         </div>
-        <span className={`text-xs px-2 py-0.5 rounded-full ${challenge.active ? 'bg-amber-100 text-amber-700' : 'bg-gray-100 text-gray-400'}`}>
-          {challenge.active ? '进行中' : '已完成'}
-        </span>
+        {challenge.active && (
+          <div>
+            <div className="w-full bg-gray-100 rounded-full h-2 mb-1.5">
+              <div className="bg-emerald-400 h-2 rounded-full transition-all" style={{ width: `${progress}%` }} />
+            </div>
+            <div className="flex justify-between items-center">
+              <span className="text-xs text-gray-400">{checkins.length}/{challenge.total_days} 天</span>
+              {!checkedToday && (
+                <button onClick={checkin} className="bg-emerald-500 text-white px-4 py-1.5 rounded-xl text-xs font-medium active:scale-95 transition-transform shadow-sm">
+                  今日打卡
+                </button>
+              )}
+              {checkedToday && <span className="text-xs text-green-600 font-medium">今日已完成</span>}
+            </div>
+          </div>
+        )}
       </div>
-      {challenge.active && (
-        <div>
-          <div className="w-full bg-gray-100 rounded-full h-2 mb-1">
-            <div className="bg-amber-400 h-2 rounded-full transition-all" style={{ width: `${progress}%` }} />
-          </div>
-          <div className="flex justify-between items-center">
-            <span className="text-xs text-gray-400">{checkins.length}/{challenge.total_days} 天</span>
-            {!checkedToday && (
-              <button onClick={checkin} className="bg-amber-500 text-white px-3 py-1 rounded-full text-xs font-medium active:scale-95 transition-transform">
-                今日打卡
-              </button>
-            )}
-            {checkedToday && <span className="text-xs text-green-600">今日已完成</span>}
-          </div>
-        </div>
-      )}
     </div>
   );
 }
@@ -93,7 +96,7 @@ export default function ChallengeList() {
   useEffect(() => { fetchChallenges(); }, [fetchChallenges]);
 
   return (
-    <div className="space-y-2">
+    <div className="space-y-3">
       {challenges.map((c) => (
         <ChallengeCard key={c.id} challenge={c} userId={userId} onUpdate={fetchChallenges} />
       ))}

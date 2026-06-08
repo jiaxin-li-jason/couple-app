@@ -10,7 +10,7 @@ interface Props {
 
 function DefaultAvatar({ name }: { name: string }) {
   const firstChar = name?.charAt(0) || '?';
-  const colors = ['#f59e0b', '#6b7280', '#8b5cf6', '#38bdf8', '#34d399', '#f97316', '#ec4899'];
+  const colors = ['#f43f5e', '#6b7280', '#8b5cf6', '#38bdf8', '#34d399', '#f97316', '#f59e0b'];
   const colorIndex = firstChar.charCodeAt(0) % colors.length;
 
   return (
@@ -34,7 +34,7 @@ export default function ChatBubble({ message, isMine, userInfo, partnerInfo }: P
   const info = isMine ? userInfo : partnerInfo;
 
   return (
-    <div className={`flex mb-3 gap-2 items-end ${isMine ? 'flex-row-reverse' : 'flex-row'}`}>
+    <div className={`flex mb-4 gap-2 items-end ${isMine ? 'flex-row-reverse' : 'flex-row'}`}>
       <Avatar info={info} fallback={isMine ? '我' : 'TA'} />
 
       <div className="max-w-[75%]">
@@ -45,8 +45,8 @@ export default function ChatBubble({ message, isMine, userInfo, partnerInfo }: P
           <div
             className={`w-fit max-w-full rounded-2xl px-4 py-2.5 text-sm leading-relaxed break-words ${
               isMine
-                ? 'bg-amber-500 text-white rounded-br-md shadow-sm'
-                : 'bg-white text-gray-800 rounded-bl-md shadow-sm border border-gray-200'
+                ? 'bg-rose-500 text-white rounded-br-lg shadow-sm'
+                : 'bg-gray-100 text-gray-800 rounded-bl-lg'
             }`}
           >
             {message.content}
@@ -60,9 +60,9 @@ export default function ChatBubble({ message, isMine, userInfo, partnerInfo }: P
             loading="lazy"
           />
         )}
-        <div className={`flex items-center gap-1 mt-0.5 ${isMine ? 'justify-end' : 'justify-start'}`}>
+        <div className={`flex items-center gap-1 mt-1 ${isMine ? 'justify-end' : 'justify-start'}`}>
           <p className="text-xs text-gray-400">{formatDate(message.created_at)}</p>
-          {isMine && message.read && <span className="text-xs text-amber-500">已读</span>}
+          {isMine && message.read && <span className="text-xs text-rose-400">已读</span>}
         </div>
       </div>
     </div>

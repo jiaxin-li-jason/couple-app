@@ -14,6 +14,7 @@ export default function ChatPage() {
   return (
     <div className="pt-0 h-[calc(100vh-8rem)] flex flex-col">
       <div className="pb-3 pt-6">
+        <div className="h-1 w-16 bg-gradient-to-r from-blue-400 to-cyan-300 rounded-full mb-3" />
         <h1 className="text-lg font-bold text-gray-900">我们的聊天</h1>
         <p className="text-gray-500 text-xs mt-0.5">分享每一个甜蜜瞬间</p>
       </div>

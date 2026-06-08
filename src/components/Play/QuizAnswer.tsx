@@ -57,22 +57,25 @@ export default function QuizAnswer() {
   if (questions.length === 0) return null;
 
   return (
-    <div className="space-y-3">
-      <h3 className="text-sm font-semibold text-gray-500">TA给你的题</h3>
-      {questions.map((q) => (
-        <div key={q.id} className="bg-white border border-gray-200 rounded-xl p-4 space-y-3">
-          <p className="text-gray-800 font-medium">{q.question}</p>
-          {q.options.map((opt, i) => (
-            <button
-              key={i}
-              onClick={() => answer(q, i)}
-              className="w-full text-left bg-gray-50 rounded-lg px-4 py-2.5 text-sm text-gray-700 active:bg-gray-100 transition-colors border border-gray-100"
-            >
-              {['A', 'B', 'C', 'D'][i]}. {opt}
-            </button>
-          ))}
-        </div>
-      ))}
+    <div className="bg-white rounded-2xl border border-gray-100 overflow-hidden card">
+      <div className="h-1 bg-gradient-to-r from-sky-400 to-cyan-300" />
+      <div className="p-5 space-y-4">
+        <h3 className="text-sm font-semibold text-gray-500">TA给你的题</h3>
+        {questions.map((q) => (
+          <div key={q.id} className="space-y-3">
+            <p className="text-gray-800 font-medium">{q.question}</p>
+            {q.options.map((opt, i) => (
+              <button
+                key={i}
+                onClick={() => answer(q, i)}
+                className="w-full text-left bg-gray-50 rounded-xl px-4 py-3 text-sm text-gray-700 active:bg-gray-100 transition-colors border border-gray-100 hover:border-sky-200"
+              >
+                {['A', 'B', 'C', 'D'][i]}. {opt}
+              </button>
+            ))}
+          </div>
+        ))}
+      </div>
     </div>
   );
 }

@@ -15,6 +15,7 @@ export default function HomePage() {
 
   return (
     <div className="space-y-5 pt-6">
+      <div className="h-1 w-16 bg-gradient-to-r from-rose-400 to-rose-300 rounded-full" />
       <div className="pb-1">
         <h1 className="text-lg font-bold text-gray-900">纪念日</h1>
         <p className="text-gray-500 text-xs mt-0.5">珍惜每一个特别的日子</p>

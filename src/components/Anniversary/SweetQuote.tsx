@@ -25,8 +25,8 @@ export default function SweetQuote() {
   if (!quote) return null;
 
   return (
-    <div className="bg-white rounded-xl px-4 py-3 border border-gray-200">
-      <p className="text-gray-600 text-sm">{quote}</p>
+    <div className="bg-rose-50/60 rounded-xl px-5 py-4 border border-rose-100 card">
+      <p className="text-rose-700 text-sm leading-relaxed">&ldquo;{quote}&rdquo;</p>
     </div>
   );
 }
