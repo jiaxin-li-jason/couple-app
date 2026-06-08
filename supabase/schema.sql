@@ -26,6 +26,7 @@ CREATE TABLE photos (
   caption TEXT DEFAULT '',
   uploaded_by UUID REFERENCES users(id) NOT NULL,
   month_tag TEXT NOT NULL,
+  date DATE DEFAULT CURRENT_DATE,
   created_at TIMESTAMPTZ DEFAULT now()
 );
 

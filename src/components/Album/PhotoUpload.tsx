@@ -2,12 +2,13 @@
 import { useRef, useState } from 'react';
 
 interface Props {
-  onUpload: (file: File, caption: string) => Promise<void>;
+  onUpload: (file: File, caption: string, date: string) => Promise<void>;
 }
 
 export default function PhotoUpload({ onUpload }: Props) {
   const [show, setShow] = useState(false);
   const [caption, setCaption] = useState('');
+  const [date, setDate] = useState(new Date().toISOString().split('T')[0]);
   const [preview, setPreview] = useState<string | null>(null);
   const [uploading, setUploading] = useState(false);
   const albumRef = useRef<HTMLInputElement>(null);
@@ -46,6 +47,12 @@ export default function PhotoUpload({ onUpload }: Props) {
         <img src={preview} alt="预览" className="w-full rounded-xl max-h-64 object-cover shadow-sm" />
       )}
       <input
+        type="date"
+        value={date}
+        onChange={(e) => setDate(e.target.value)}
+        className="w-full bg-rose-50 border border-rose-200 rounded-xl px-4 py-3 outline-none focus:border-rose-400 focus:bg-white transition-colors text-sm text-gray-700"
+      />
+      <input
         value={caption}
         onChange={(e) => setCaption(e.target.value)}
         placeholder="写一句话..."
@@ -57,9 +64,9 @@ export default function PhotoUpload({ onUpload }: Props) {
             const file = albumRef.current?.files?.[0] || cameraRef.current?.files?.[0];
             if (!file) return;
             setUploading(true);
-            await onUpload(file, caption);
+            await onUpload(file, caption, date);
             setUploading(false);
-            setCaption(''); setPreview(null); setShow(false);
+            setCaption(''); setPreview(null); setDate(new Date().toISOString().split('T')[0]); setShow(false);
           }}
           disabled={(!albumRef.current?.files?.[0] && !cameraRef.current?.files?.[0]) || uploading}
           className="flex-1 bg-gradient-to-r from-rose-400 to-pink-500 text-white py-2.5 rounded-xl font-medium disabled:opacity-40 shadow-lg shadow-rose-500/20"

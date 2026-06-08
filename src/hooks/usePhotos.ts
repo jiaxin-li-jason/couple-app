@@ -11,6 +11,7 @@ export interface Photo {
   caption: string;
   uploaded_by: string;
   month_tag: string;
+  date?: string;
   created_at: string;
 }
 
@@ -22,7 +23,7 @@ export function usePhotos() {
     const { data } = await supabase
       .from('photos')
       .select('*')
-      .order('created_at', { ascending: false });
+      .order('date', { ascending: false, nullsFirst: false });
     if (data) setPhotos(data);
     setLoading(false);
   }, []);
@@ -30,7 +31,7 @@ export function usePhotos() {
   useEffect(() => { fetchPhotos(); }, [fetchPhotos]);
 
   /** 上传照片（含压缩） */
-  const uploadPhoto = useCallback(async (file: File, caption: string) => {
+  const uploadPhoto = useCallback(async (file: File, caption: string, date: string) => {
     const user = await getCurrentUser();
     if (!user) throw new Error('未登录');
 
@@ -59,7 +60,8 @@ export function usePhotos() {
       image_url: urlData.publicUrl,
       caption,
       uploaded_by: user.id,
-      month_tag: getMonthTag(),
+      date,
+      month_tag: getMonthTag(new Date(date)),
     });
 
     if (dbError) throw dbError;

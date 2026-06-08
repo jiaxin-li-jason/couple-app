@@ -1,18 +1,15 @@
 'use client';
 import { useState, useRef } from 'react';
 import ImagePicker from './ImagePicker';
-import VoiceRecorder from './VoiceRecorder';
 
 interface Props {
   onSendText: (text: string) => Promise<void>;
   onSendImage: (file: File) => Promise<void>;
-  onSendVoice: (blob: Blob) => Promise<void>;
 }
 
-export default function ChatInput({ onSendText, onSendImage, onSendVoice }: Props) {
+export default function ChatInput({ onSendText, onSendImage }: Props) {
   const [text, setText] = useState('');
   const [showImagePicker, setShowImagePicker] = useState(false);
-  const [showRecorder, setShowRecorder] = useState(false);
 
   const handleSend = async () => {
     if (!text.trim()) return;
@@ -31,18 +28,8 @@ export default function ChatInput({ onSendText, onSendImage, onSendVoice }: Prop
           onClose={() => setShowImagePicker(false)}
         />
       )}
-      {showRecorder && (
-        <VoiceRecorder
-          onSend={async (blob) => {
-            await onSendVoice(blob);
-            setShowRecorder(false);
-          }}
-          onClose={() => setShowRecorder(false)}
-        />
-      )}
       <div className="flex items-center gap-2 px-2">
         <button onClick={() => setShowImagePicker(true)} className="text-xl text-gray-400 active:text-rose-500">📷</button>
-        <button onClick={() => setShowRecorder(true)} className="text-xl text-gray-400 active:text-rose-500">🎤</button>
         <input
           value={text}
           onChange={(e) => setText(e.target.value)}

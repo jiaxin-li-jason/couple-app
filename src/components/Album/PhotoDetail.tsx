@@ -68,7 +68,7 @@ export default function PhotoDetail({ photo }: Props) {
     <div className="min-h-screen bg-rose-50">
       <div className="sticky top-0 bg-white/90 backdrop-blur flex items-center px-4 py-3 border-b border-rose-100 z-10">
         <button onClick={() => router.back()} className="text-rose-400 mr-4 font-medium">← 返回</button>
-        <span className="text-sm font-medium text-gray-500">{formatDate(photo.created_at)}</span>
+        <span className="text-sm font-medium text-gray-500">{formatDate(photo.date || photo.created_at)}</span>
       </div>
 
       <div className="bg-white">

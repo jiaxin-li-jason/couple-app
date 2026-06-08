@@ -1,16 +1,44 @@
-import { Message } from '@/hooks/useChat';
+import { Message, UserInfo } from '@/hooks/useChat';
 import { formatDate } from '@/lib/utils';
 
 interface Props {
   message: Message;
   isMine: boolean;
-  backgroundUrl?: string | null;
+  userInfo?: UserInfo | null;
+  partnerInfo?: UserInfo | null;
 }
 
-export default function ChatBubble({ message, isMine }: Props) {
+function DefaultAvatar({ name }: { name: string }) {
+  const firstChar = name?.charAt(0) || '?';
+  const colors = ['#f472b6', '#fb7185', '#e879f9', '#818cf8', '#38bdf8', '#34d399', '#fbbf24'];
+  const colorIndex = firstChar.charCodeAt(0) % colors.length;
+
   return (
-    <div className={`flex mb-3 ${isMine ? 'justify-end' : 'justify-start'}`}>
+    <div
+      className="w-8 h-8 rounded-full flex items-center justify-center text-white text-sm font-medium shrink-0"
+      style={{ backgroundColor: colors[colorIndex] }}
+    >
+      {firstChar}
+    </div>
+  );
+}
+
+export default function ChatBubble({ message, isMine, userInfo, partnerInfo }: Props) {
+  const info = isMine ? userInfo : partnerInfo;
+
+  return (
+    <div className={`flex mb-3 gap-2 ${isMine ? 'justify-end' : 'justify-start'}`}>
+      {!isMine && (
+        info?.avatar_url ? (
+          <img src={info.avatar_url} alt="" className="w-8 h-8 rounded-full object-cover shrink-0 self-end" />
+        ) : (
+          <DefaultAvatar name={info?.nickname || 'TA'} />
+        )
+      )}
       <div className={`max-w-[75%] ${isMine ? 'order-1' : ''}`}>
+        {!isMine && info?.nickname && (
+          <p className="text-xs text-gray-400 mb-1 ml-1">{info.nickname}</p>
+        )}
         {message.type === 'text' && (
           <div
             className={`rounded-2xl px-4 py-2.5 text-sm leading-relaxed ${
@@ -46,6 +74,13 @@ export default function ChatBubble({ message, isMine }: Props) {
           {isMine && message.read && <span className="text-xs text-rose-400">已读</span>}
         </div>
       </div>
+      {isMine && (
+        info?.avatar_url ? (
+          <img src={info.avatar_url} alt="" className="w-8 h-8 rounded-full object-cover shrink-0 self-end" />
+        ) : (
+          <DefaultAvatar name={info?.nickname || '我'} />
+        )
+      )}
     </div>
   );
 }

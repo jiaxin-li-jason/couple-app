@@ -14,15 +14,41 @@ export interface Message {
   created_at: string;
 }
 
+export interface UserInfo {
+  id: string;
+  nickname: string;
+  avatar_url: string | null;
+}
+
 export function useChat() {
   const [messages, setMessages] = useState<Message[]>([]);
   const [userId, setUserId] = useState('');
+  const [userInfo, setUserInfo] = useState<UserInfo | null>(null);
+  const [partnerInfo, setPartnerInfo] = useState<UserInfo | null>(null);
   const [loading, setLoading] = useState(true);
   const bottomRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    getCurrentUser().then((u) => {
-      if (u) setUserId(u.id);
+    getCurrentUser().then(async (u) => {
+      if (u) {
+        setUserId(u.id);
+
+        const { data: myInfo } = await supabase
+          .from('users')
+          .select('id, nickname, avatar_url')
+          .eq('id', u.id)
+          .single();
+        if (myInfo) setUserInfo(myInfo);
+
+        if (u.partner_id) {
+          const { data: pInfo } = await supabase
+            .from('users')
+            .select('id, nickname, avatar_url')
+            .eq('id', u.partner_id)
+            .single();
+          if (pInfo) setPartnerInfo(pInfo);
+        }
+      }
     });
   }, []);
 
@@ -93,17 +119,5 @@ export function useChat() {
     });
   }, [userId]);
 
-  const sendVoice = useCallback(async (blob: Blob) => {
-    const fileName = `chat/${userId}/${Date.now()}.webm`;
-    await supabase.storage.from('chat-voice').upload(fileName, blob);
-    const { data: urlData } = supabase.storage.from('chat-voice').getPublicUrl(fileName);
-
-    await supabase.from('messages').insert({
-      sender_id: userId,
-      type: 'voice',
-      content: urlData.publicUrl,
-    });
-  }, [userId]);
-
-  return { messages, userId, loading, sendText, sendImage, sendVoice, bottomRef };
+  return { messages, userId, userInfo, partnerInfo, loading, sendText, sendImage, bottomRef };
 }
