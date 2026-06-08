@@ -151,11 +151,11 @@ export default function CountdownList({ anniversaries, onDelete, onUpdate }: Pro
         <p className="text-center text-gray-400 text-sm py-8">还没有纪念日，点击右下角 + 添加</p>
       )}
 
-      {/* 编辑弹窗 */}
+      {/* 编辑弹窗 — 居中显示 */}
       {editing && (
-        <div className="fixed inset-0 z-[60] flex items-end justify-center">
+        <div className="fixed inset-0 z-[60] flex items-center justify-center">
           <div className="absolute inset-0 bg-black/20 backdrop-blur-sm" onClick={() => setEditing(null)} />
-          <div className="relative w-full max-w-lg bg-white rounded-3xl rounded-b-none px-6 pt-6 pb-[calc(2.5rem+env(safe-area-inset-bottom,0px))] animate-slide-up">
+          <div className="relative w-[calc(100%-2rem)] max-w-lg bg-white rounded-3xl px-6 pt-6 pb-6 animate-slide-up shadow-2xl">
             <div className="w-10 h-1 bg-gray-200 rounded-full mx-auto mb-5" />
             <h3 className="text-base font-bold text-gray-800 text-center mb-5">更改纪念日</h3>
             <div className="space-y-4">

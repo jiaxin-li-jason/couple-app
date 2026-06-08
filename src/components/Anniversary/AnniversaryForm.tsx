@@ -42,16 +42,17 @@ export default function AnniversaryForm({ onSubmit }: Props) {
 
       {/* 底部弹出表单 */}
       {show && (
-        <div className="fixed inset-0 z-[60] flex items-end justify-center">
+        <div className="fixed inset-0 z-[60] flex items-center justify-center">
           <div className="absolute inset-0 bg-black/20 backdrop-blur-sm" onClick={() => setShow(false)} />
 
-          <div className="relative w-full max-w-lg bg-white rounded-3xl rounded-b-none animate-slide-up max-h-[90vh] flex flex-col">
-            <div className="px-6 pt-6 shrink-0">
+          {/* 居中弹窗，不贴底 */}
+          <div className="relative w-[calc(100%-2rem)] max-w-lg bg-white rounded-3xl animate-slide-up shadow-2xl">
+            <div className="px-6 pt-6">
               <div className="w-10 h-1 bg-gray-200 rounded-full mx-auto mb-5" />
               <h3 className="text-base font-bold text-gray-800 text-center mb-5">添加纪念日</h3>
             </div>
 
-            <div className="flex-1 overflow-y-auto px-6 space-y-4">
+            <div className="px-6 space-y-4">
               <input
                 value={title}
                 onChange={(e) => setTitle(e.target.value)}
@@ -87,7 +88,7 @@ export default function AnniversaryForm({ onSubmit }: Props) {
               </div>
             </div>
 
-            <div className="shrink-0 px-6 pt-4 pb-[calc(1.5rem+env(safe-area-inset-bottom,0px))]">
+            <div className="px-6 pt-5 pb-6">
               <div className="flex gap-3">
                 <button
                   onClick={() => setShow(false)}
