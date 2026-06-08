@@ -42,7 +42,7 @@ export default function AlbumPage() {
       </div>
 
       {/* 可滚动内容 */}
-      <div className="flex-1 overflow-y-auto min-h-0 pb-24 mt-4 space-y-4">
+      <div className="flex-1 overflow-y-auto min-h-0 mt-4 space-y-4">
         {loading ? (
           <p className="text-center text-gray-400 py-20">加载中...</p>
         ) : totalCount === 0 ? (

@@ -23,7 +23,7 @@ export default function PlayPage() {
       </div>
 
       {/* 可滚动内容 */}
-      <div className="flex-1 overflow-y-auto min-h-0 pb-24 mt-6 space-y-8">
+      <div className="flex-1 overflow-y-auto min-h-0 mt-6 space-y-8">
         <section>
           <DailyQuestion />
         </section>

@@ -88,7 +88,7 @@ export default function SettingsPage() {
       </div>
 
       {/* 可滚动内容 */}
-      <div className="flex-1 overflow-y-auto min-h-0 pb-24 mt-6 space-y-6">
+      <div className="flex-1 overflow-y-auto min-h-0 mt-6 space-y-6">
 
       {/* 头像 + 昵称 */}
       <div className="flex flex-col items-center py-4">
