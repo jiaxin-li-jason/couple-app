@@ -62,7 +62,7 @@ export default function SettingsPage() {
       const fileName = `avatars/${user.id}.${ext}`;
       await supabase.storage.from('avatars').upload(fileName, compressed, { upsert: true });
       const { data: urlData } = supabase.storage.from('avatars').getPublicUrl(fileName);
-      const url = urlData.publicUrl;
+      const url = urlData.publicUrl + '?t=' + Date.now(); // 缓存刷新
       await supabase.from('users').update({ avatar_url: url }).eq('id', user.id);
       setAvatarUrl(url);
       toast.success('头像已更新');
