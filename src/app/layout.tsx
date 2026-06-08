@@ -7,13 +7,13 @@ import OfflineBanner from '@/components/OfflineBanner';
 import { Toaster } from 'react-hot-toast';
 
 export const metadata: Metadata = {
-  title: '我们的空间',
-  description: '专属情侣空间',
+  title: '齐齐 & Jerry',
+  description: '属于齐齐和Jerry的专属空间',
   manifest: '/manifest.json',
   appleWebApp: {
     capable: true,
     statusBarStyle: 'default',
-    title: '我们的空间',
+    title: '齐齐 & Jerry',
     startupImage: [],
   },
 };

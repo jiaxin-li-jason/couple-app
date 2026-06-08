@@ -19,7 +19,7 @@ export default function DaysCounter({ days, loveDate }: Props) {
     >
       {/* 顶部小字 */}
       <p className="text-rose-400/80 text-xs tracking-widest uppercase font-medium mb-3">
-        We have been together
+        齐齐 & Jerry
       </p>
 
       {/* 超大天数 */}
@@ -33,7 +33,9 @@ export default function DaysCounter({ days, loveDate }: Props) {
         <p className="text-gray-400 text-xs mt-3">
           {new Date(loveDate).toLocaleDateString('zh-CN', {
             year: 'numeric', month: '2-digit', day: '2-digit'
-          }).replace(/\//g, '.')} — 今
+          }).replace(/\//g, '.')} — {new Date().toLocaleDateString('zh-CN', {
+            year: 'numeric', month: '2-digit', day: '2-digit'
+          }).replace(/\//g, '.')}
         </p>
       )}
 

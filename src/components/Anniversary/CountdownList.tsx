@@ -56,7 +56,7 @@ export default function CountdownList({ anniversaries, onDelete, onUpdate }: Pro
           {upcoming.map((a) => (
             <div
               key={a.id}
-              className={`relative flex items-center rounded-2xl px-5 py-4 overflow-hidden transition-all
+              className={`relative flex items-center rounded-2xl px-5 py-4 transition-all
                 ${isTodayEvent(a.daysUntil)
                   ? 'bg-gradient-to-br from-amber-50 to-amber-100/60 border border-amber-200/80'
                   : 'bg-white border border-gray-100'

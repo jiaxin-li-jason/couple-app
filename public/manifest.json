@@ -1,11 +1,11 @@
 {
-  "name": "我们的空间",
-  "short_name": "我们的空间",
-  "description": "专属情侣空间 - 纪念日、相册、聊天、互动",
+  "name": "齐齐 & Jerry",
+  "short_name": "齐齐 & Jerry",
+  "description": "属于齐齐和Jerry的专属空间",
   "start_url": "/",
   "display": "standalone",
   "background_color": "#ffffff",
-  "theme_color": "#2d9365",
+  "theme_color": "#f43f5e",
   "orientation": "portrait",
   "icons": [
     {

@@ -6,6 +6,8 @@ import QuizAnswer from '@/components/Play/QuizAnswer';
 import ChallengeForm from '@/components/Play/ChallengeForm';
 import ChallengeList from '@/components/Play/ChallengeCard';
 import Spinner from '@/components/Play/Spinner';
+import BucketList from '@/components/Play/BucketList';
+import Scoreboard from '@/components/Play/Scoreboard';
 
 export default function PlayPage() {
   const [refreshKey, setRefreshKey] = useState(0);
@@ -34,6 +36,12 @@ export default function PlayPage() {
         <section className="space-y-4">
           <ChallengeList />
           <ChallengeForm onCreated={refresh} />
+        </section>
+        <section>
+          <BucketList />
+        </section>
+        <section>
+          <Scoreboard />
         </section>
         <Spinner />
       </div>
