@@ -26,22 +26,31 @@ ${preferences ? `偏好：${preferences}` : ''}
 
 要求：具体到餐厅/景点名称，给出实际可执行的方案，语言简洁温馨。`;
 
-  try {
-    const response = await fetch(
-      `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=${process.env.GEMINI_API_KEY}`,
-      {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          contents: [{ parts: [{ text: prompt }] }],
-        }),
-      }
-    );
+  const key = process.env.GEMINI_API_KEY;
+  const models = ['gemini-2.5-flash', 'gemini-2.0-flash'];
 
-    const data = await response.json();
-    const text = data.candidates?.[0]?.content?.parts?.[0]?.text || '抱歉，生成失败，请稍后再试。';
-    return NextResponse.json({ text });
-  } catch {
-    return NextResponse.json({ text: '网络错误，请稍后再试。' }, { status: 500 });
+  for (const model of models) {
+    try {
+      const response = await fetch(
+        `https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent?key=${key}`,
+        {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            contents: [{ parts: [{ text: prompt }] }],
+          }),
+        }
+      );
+
+      if (!response.ok) continue;
+
+      const data = await response.json();
+      const text = data.candidates?.[0]?.content?.parts?.[0]?.text;
+      if (text) return NextResponse.json({ text });
+    } catch {
+      continue;
+    }
   }
+
+  return NextResponse.json({ text: 'AI 服务暂时不可用，请稍后再试 🙏' });
 }
