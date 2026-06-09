@@ -6,6 +6,7 @@ import QuizAnswer from '@/components/Play/QuizAnswer';
 import ChallengeForm from '@/components/Play/ChallengeForm';
 import ChallengeList from '@/components/Play/ChallengeCard';
 import BucketList from '@/components/Play/BucketList';
+import DateSuggestion from '@/components/Play/DateSuggestion';
 
 export default function PlayPage() {
   const [refreshKey, setRefreshKey] = useState(0);
@@ -24,6 +25,9 @@ export default function PlayPage() {
 
       {/* 可滚动内容 */}
       <div className="flex-1 overflow-y-auto min-h-0 mt-6 space-y-8">
+        <section>
+          <DateSuggestion />
+        </section>
         <section>
           <DailyQuestion />
         </section>
