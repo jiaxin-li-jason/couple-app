@@ -27,7 +27,7 @@ ${preferences ? `偏好：${preferences}` : ''}
 要求：具体到餐厅/景点名称，给出实际可执行的方案，语言简洁温馨。`;
 
   const key = process.env.GEMINI_API_KEY;
-  const models = ['gemini-2.5-flash', 'gemini-2.0-flash'];
+  const models = ['gemini-2.5-flash-lite', 'gemini-2.5-flash'];
 
   for (const model of models) {
     try {
