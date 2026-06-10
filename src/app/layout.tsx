@@ -35,11 +35,11 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         <link rel="preconnect" href="https://fonts.googleapis.com" />
         <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
         <link
-          href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@400;500;600;700&display=swap"
+          href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@400;500;600;700&family=Noto+Serif+SC:wght@400;600;700&display=swap"
           rel="stylesheet"
         />
       </head>
-      <body className="bg-[#F8F7F4] text-gray-900 font-sans antialiased h-full overflow-hidden">
+      <body className="bg-[#F8F7F4] text-warm-900 font-sans antialiased h-full overflow-hidden">
         <OfflineBanner />
         <PairingGuard>
           <NotificationInit />
@@ -48,7 +48,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
           </main>
           <TabBar />
         </PairingGuard>
-        <Toaster position="top-center" toastOptions={{ style: { borderRadius: '16px' } }} />
+        <Toaster position="top-center" toastOptions={{ style: { borderRadius: '16px', fontFamily: '"Noto Sans SC", sans-serif' } }} />
       </body>
     </html>
   );

@@ -3,44 +3,47 @@ interface Props {
   loveDate: string | null;
 }
 
-const typeColors: Record<string, string> = {
-  love: 'bg-rose-400',
-  birthday: 'bg-amber-400',
-  trip: 'bg-blue-400',
-  custom: 'bg-violet-400',
-};
-
 export default function DaysCounter({ days, loveDate }: Props) {
   return (
-    <div className="relative bg-white rounded-3xl px-8 py-10 text-center overflow-hidden"
+    <div
+      className="relative rounded-[2rem] px-8 pt-10 pb-9 text-center overflow-hidden bg-warm-gradient texture-dots"
       style={{
-        boxShadow: '0 4px 20px rgba(0,0,0,0.04), 0 12px 40px rgba(0,0,0,0.04), 0 2px 8px rgba(244,63,94,0.06)',
+        boxShadow:
+          '0 2px 8px rgba(244,63,94,0.04), 0 4px 20px rgba(244,63,94,0.04), 0 12px 40px rgba(61,55,49,0.03)',
       }}
     >
-      {/* 顶部小字 */}
-      <p className="text-rose-400/80 text-xs tracking-widest uppercase font-medium mb-3">
-        齐齐 & Jerry
+      {/* 顶部：齐齐 & Jerry */}
+      <p className="text-warm-400/80 text-[0.7rem] tracking-[0.25em] uppercase mb-3 select-none">
+        齐齐 <span className="text-rose-300/50 mx-1.5">&</span> Jerry
       </p>
 
-      {/* 超大天数 */}
-      <p className="text-[4.5rem] font-black leading-none tracking-tight text-rose-500 select-none">
-        {days}
-        <span className="text-xl font-normal text-rose-300 ml-1 align-middle">天</span>
-      </p>
+      {/* 大号天数 — serif */}
+      <div className="relative inline-flex items-baseline">
+        <span
+          className="text-[5.5rem] font-bold leading-none tracking-tight text-rose-500 select-none"
+          style={{ fontFamily: '"Noto Serif SC", "Noto Serif", Georgia, serif' }}
+        >
+          {days}
+        </span>
+        <span className="text-xl font-normal text-rose-300/70 ml-1.5 select-none"
+          style={{ fontFamily: '"Noto Serif SC", "Noto Serif", Georgia, serif' }}>
+          天
+        </span>
+      </div>
 
       {/* 日期范围 */}
       {loveDate && (
-        <p className="text-gray-400 text-xs mt-3">
+        <p className="text-warm-400/70 text-[0.7rem] mt-4 tracking-wider">
           {new Date(loveDate).toLocaleDateString('zh-CN', {
             year: 'numeric', month: '2-digit', day: '2-digit'
-          }).replace(/\//g, '.')} — {new Date().toLocaleDateString('zh-CN', {
+          }).replace(/\//g, ' · ')}&nbsp;&nbsp;—&nbsp;&nbsp;{new Date().toLocaleDateString('zh-CN', {
             year: 'numeric', month: '2-digit', day: '2-digit'
-          }).replace(/\//g, '.')}
+          }).replace(/\//g, ' · ')}
         </p>
       )}
 
-      {/* 底部渐变装饰线 */}
-      <div className="absolute bottom-0 left-8 right-8 h-[2px] rounded-full bg-gradient-to-r from-rose-400 via-rose-300 to-amber-400 opacity-70" />
+      {/* 底部装饰线 — 更柔和 */}
+      <div className="absolute bottom-0 left-10 right-10 h-px rounded-full bg-gradient-to-r from-transparent via-rose-300/30 to-transparent" />
     </div>
   );
 }
