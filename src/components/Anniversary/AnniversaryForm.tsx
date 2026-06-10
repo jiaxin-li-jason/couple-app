@@ -59,13 +59,24 @@ export default function AnniversaryForm({ onSubmit }: Props) {
                 placeholder="纪念日名称"
                 className="w-full bg-gray-50 border border-gray-200 rounded-xl px-4 py-3 text-sm outline-none focus:border-rose-300 focus:bg-white transition-all"
               />
-              <input
-                type="date"
-                value={date}
-                onChange={(e) => setDate(e.target.value)}
-                className="w-full bg-gray-50 border border-gray-200 rounded-xl px-4 py-3 text-sm outline-none focus:border-rose-300 focus:bg-white transition-all max-w-full"
-                style={{ maxWidth: '100%', boxSizing: 'border-box' }}
-              />
+              <div className="relative">
+                <input
+                  type="text"
+                  value={date ? new Date(date + 'T00:00:00').toLocaleDateString('zh-CN', { year: 'numeric', month: 'long', day: 'numeric' }) : ''}
+                  placeholder="选择日期"
+                  readOnly
+                  onClick={() => (document.getElementById('date-picker') as HTMLInputElement)?.showPicker()}
+                  className="w-full bg-gray-50 border border-gray-200 rounded-xl px-4 py-3 text-sm outline-none focus:border-rose-300 focus:bg-white transition-all cursor-pointer"
+                />
+                <input
+                  id="date-picker"
+                  type="date"
+                  value={date}
+                  onChange={(e) => setDate(e.target.value)}
+                  className="absolute inset-0 opacity-0 w-full h-full cursor-pointer"
+                  style={{ fontSize: '16px' }}
+                />
+              </div>
 
               {/* 类型选择 */}
               <div>
