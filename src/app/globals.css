@@ -149,3 +149,10 @@ body {
 .bg-warm-gradient {
   background: linear-gradient(135deg, #fefaf7 0%, #fff5f6 50%, #fefaf7 100%);
 }
+
+/* ===== Date input 溢出修复 ===== */
+input[type="date"] {
+  max-width: 100%;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}

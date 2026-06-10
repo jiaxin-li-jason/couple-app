@@ -46,7 +46,7 @@ export default function AnniversaryForm({ onSubmit }: Props) {
           <div className="absolute inset-0 bg-black/20 backdrop-blur-sm" onClick={() => setShow(false)} />
 
           {/* 居中弹窗，不贴底 */}
-          <div className="relative w-[calc(100%-2rem)] max-w-lg bg-white rounded-3xl animate-slide-up shadow-2xl">
+          <div className="relative w-[calc(100%-2rem)] max-w-lg bg-white rounded-3xl animate-slide-up shadow-2xl overflow-hidden">
             <div className="px-6 pt-6">
               <div className="w-10 h-1 bg-gray-200 rounded-full mx-auto mb-5" />
               <h3 className="text-base font-bold text-gray-800 text-center mb-5">添加纪念日</h3>
@@ -63,7 +63,8 @@ export default function AnniversaryForm({ onSubmit }: Props) {
                 type="date"
                 value={date}
                 onChange={(e) => setDate(e.target.value)}
-                className="w-full bg-gray-50 border border-gray-200 rounded-xl px-4 py-3 text-sm outline-none focus:border-rose-300 focus:bg-white transition-all"
+                className="w-full bg-gray-50 border border-gray-200 rounded-xl px-4 py-3 text-sm outline-none focus:border-rose-300 focus:bg-white transition-all max-w-full"
+                style={{ maxWidth: '100%', boxSizing: 'border-box' }}
               />
 
               {/* 类型选择 */}
