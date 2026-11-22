@@ -1,5 +1,6 @@
 'use client';
 import { useState } from 'react';
+import { generateDateAdvice } from '@/lib/gemini';
 
 export default function DateSuggestion() {
   const [location, setLocation] = useState('');
@@ -17,18 +18,13 @@ export default function DateSuggestion() {
     setLoading(true);
     setResult('');
     try {
-      const res = await fetch('/api/date-advice', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          location: location.trim(),
-          weather: weather || '不限',
-          time: time || '不限',
-          preferences: preferences.trim() || undefined,
-        }),
+      const text = await generateDateAdvice({
+        location: location.trim(),
+        weather: weather || '不限',
+        time: time || '不限',
+        preferences: preferences.trim() || undefined,
       });
-      const data = await res.json();
-      setResult(data.text);
+      setResult(text);
     } catch {
       setResult('生成失败，请稍后再试');
     } finally {

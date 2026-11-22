@@ -1,12 +1,11 @@
 'use client';
 import { useEffect, useState, useCallback } from 'react';
-import { useParams, useRouter } from 'next/navigation';
+import { useRouter } from 'next/navigation';
 import { supabase } from '@/lib/supabase';
 import PhotoDetail from '@/components/Album/PhotoDetail';
 import { Photo } from '@/hooks/usePhotos';
 
-export default function PhotoDetailPage() {
-  const { id } = useParams();
+export default function PhotoDetailView({ photoId }: { photoId: string }) {
   const router = useRouter();
   const [photos, setPhotos] = useState<Photo[]>([]);
   const [loading, setLoading] = useState(true);
@@ -23,7 +22,7 @@ export default function PhotoDetailPage() {
   }, []);
 
   // 找到当前照片所在日期组
-  const currentPhoto = photos.find((p) => p.id === id);
+  const currentPhoto = photos.find((p) => p.id === photoId);
   const groupPhotos = useCallback(() => {
     if (!currentPhoto) return [];
     const dateKey = currentPhoto.date || currentPhoto.created_at.split('T')[0];
@@ -35,7 +34,7 @@ export default function PhotoDetailPage() {
   const handleNavigate = useCallback((index: number) => {
     const target = groupPhotos[index];
     if (target) {
-      router.replace(`/album/${target.id}`);
+      router.replace(`/album?photo=${target.id}`);
     }
   }, [groupPhotos, router]);
 

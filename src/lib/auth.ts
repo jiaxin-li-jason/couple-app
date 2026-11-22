@@ -18,7 +18,7 @@ export async function signInWithPassword(email: string, password: string) {
 export async function signInWithEmail(email: string) {
   const { error } = await supabase.auth.signInWithOtp({
     email,
-    options: { emailRedirectTo: 'https://couple-app-rose.vercel.app' },
+    options: { emailRedirectTo: 'https://jiaxin-li-jason.github.io/couple-app' },
   });
   if (error) throw error;
 }

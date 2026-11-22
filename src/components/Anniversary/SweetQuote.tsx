@@ -1,5 +1,6 @@
 'use client';
 import { useState, useEffect } from 'react';
+import { generateDailyQuote } from '@/lib/gemini';
 
 export default function SweetQuote() {
   const [quote, setQuote] = useState('');
@@ -23,12 +24,11 @@ export default function SweetQuote() {
     }
 
     // 否则请求 AI
-    fetch('/api/daily-quote', { method: 'POST' })
-      .then((res) => res.json())
-      .then((data) => {
-        if (data.text) {
-          setQuote(data.text);
-          localStorage.setItem(cacheKey, JSON.stringify({ text: data.text, date: today }));
+    generateDailyQuote()
+      .then((text) => {
+        if (text) {
+          setQuote(text);
+          localStorage.setItem(cacheKey, JSON.stringify({ text, date: today }));
         }
       })
       .catch(() => {

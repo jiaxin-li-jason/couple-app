@@ -1,20 +1,14 @@
 /** @type {import('next').NextConfig} */
-const withPWA = require('next-pwa')({
-  dest: 'public',
-  register: true,
-  skipWaiting: true,
-  disable: process.env.NODE_ENV === 'development',
-});
+const basePath = process.env.NEXT_PUBLIC_BASE_PATH || '';
 
 const nextConfig = {
+  // 静态导出：适配 GitHub Pages 等纯静态托管
+  output: 'export',
+  basePath,
+  trailingSlash: true,
   images: {
-    remotePatterns: [
-      {
-        protocol: 'https',
-        hostname: '**.supabase.co',
-      },
-    ],
+    unoptimized: true,
   },
 };
 
-module.exports = withPWA(nextConfig);
+module.exports = nextConfig;

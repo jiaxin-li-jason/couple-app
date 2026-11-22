@@ -43,8 +43,8 @@ const config: Config = {
         },
       },
       fontFamily: {
-        sans: ['"Noto Sans SC"', '"Hiragino Sans"', '"Hiragino Kaku Gothic ProN"', 'system-ui', 'sans-serif'],
-        serif: ['"Noto Serif SC"', '"Noto Serif"', 'Georgia', 'serif'],
+        sans: ['-apple-system', 'BlinkMacSystemFont', '"PingFang SC"', '"Hiragino Sans GB"', '"Microsoft YaHei"', 'system-ui', 'sans-serif'],
+        serif: ['"Songti SC"', '"STSong"', '"SimSun"', 'Georgia', 'serif'],
       },
       keyframes: {
         'fade-in-up': {

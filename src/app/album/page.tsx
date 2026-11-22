@@ -1,6 +1,8 @@
 'use client';
-import { useMemo, useState, useRef } from 'react';
+import { useMemo, useState, useRef, Suspense } from 'react';
+import { useSearchParams } from 'next/navigation';
 import { usePhotos, Photo } from '@/hooks/usePhotos';
+import PhotoDetailView from '@/components/Album/PhotoDetailView';
 import PhotoUpload from '@/components/Album/PhotoUpload';
 import toast from 'react-hot-toast';
 import Link from 'next/link';
@@ -10,7 +12,9 @@ import { getCurrentUser } from '@/lib/auth';
 import { getMonthTag } from '@/lib/utils';
 import imageCompression from 'browser-image-compression';
 
-export default function AlbumPage() {
+function AlbumContent() {
+  const searchParams = useSearchParams();
+  const photoId = searchParams.get('photo');
   const { photos, loading, uploadPhotos, refresh } = usePhotos();
 
   // 菜单 & 编辑状态
@@ -105,6 +109,10 @@ export default function AlbumPage() {
     }
   };
 
+  if (photoId) {
+    return <PhotoDetailView photoId={photoId} />;
+  }
+
   return (
     <div className="h-full flex flex-col pt-6">
       {/* 固定头部 */}
@@ -192,7 +200,7 @@ export default function AlbumPage() {
                 {/* 照片网格 */}
                 <div className={`grid gap-0.5 ${post.photos.length === 1 ? 'grid-cols-1' : post.photos.length === 2 ? 'grid-cols-2' : 'grid-cols-2'}`}>
                   {post.photos.map((photo) => (
-                    <Link key={photo.id} href={`/album/${photo.id}`}>
+                    <Link key={photo.id} href={`/album?photo=${photo.id}`}>
                       <img
                         src={photo.image_url}
                         alt={photo.caption}
@@ -299,5 +307,13 @@ export default function AlbumPage() {
         </div>
       )}
     </div>
+  );
+}
+
+export default function AlbumPage() {
+  return (
+    <Suspense fallback={<div className="py-20 text-center text-gray-400">加载中...</div>}>
+      <AlbumContent />
+    </Suspense>
   );
 }

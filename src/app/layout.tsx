@@ -6,10 +6,12 @@ import NotificationInit from '@/components/NotificationInit';
 import OfflineBanner from '@/components/OfflineBanner';
 import { Toaster } from 'react-hot-toast';
 
+const basePath = process.env.NEXT_PUBLIC_BASE_PATH || '';
+
 export const metadata: Metadata = {
   title: '齐齐 & Jerry',
   description: '属于齐齐和Jerry的专属空间',
-  manifest: '/manifest.json',
+  manifest: `${basePath}/manifest.json`,
   appleWebApp: {
     capable: true,
     statusBarStyle: 'default',
@@ -30,14 +32,8 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
   return (
     <html lang="zh-CN">
       <head>
-        <link rel="apple-touch-icon" href="/icons/icon-192.png" />
+        <link rel="apple-touch-icon" href={`${basePath}/icons/icon-192.png`} />
         <meta name="apple-mobile-web-app-capable" content="yes" />
-        <link rel="preconnect" href="https://fonts.googleapis.com" />
-        <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
-        <link
-          href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@400;500;600;700&family=Noto+Serif+SC:wght@400;600;700&display=swap"
-          rel="stylesheet"
-        />
       </head>
       <body className="bg-[#F8F7F4] text-warm-900 font-sans antialiased h-full overflow-hidden">
         <OfflineBanner />
@@ -48,7 +44,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
           </main>
           <TabBar />
         </PairingGuard>
-        <Toaster position="top-center" toastOptions={{ style: { borderRadius: '16px', fontFamily: '"Noto Sans SC", sans-serif' } }} />
+        <Toaster position="top-center" toastOptions={{ style: { borderRadius: '16px', fontFamily: '"PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", sans-serif' } }} />
       </body>
     </html>
   );
